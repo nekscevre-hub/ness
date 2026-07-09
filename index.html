@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Çevre mühendisliği, sürdürülebilirlik ve Ar-Ge alanlarında bilimsel temelli, uygulamaya dönük çözümler. NEKS">
+<meta name="theme-color" content="#082650">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="neks-styles-optimized.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="neks-styles-optimized.css"></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+.hero{min-height:100vh;padding-top:68px;display:flex;align-items:center;position:relative;overflow:hidden;background:var(--neks-deep)}
+.hero-video-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.55}
+.hero-bg{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse 100% 100% at 50% 50%,rgba(0,10,40,.45) 0%,rgba(1,18,60,.72) 60%,rgba(0,8,30,.88) 100%)}
+.hero-grid{position:absolute;inset:0;z-index:2;opacity:.03;background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);background-size:60px 60px}
+.hero-inner{position:relative;z-index:3;max-width:1200px;margin:0 auto;padding:80px 5%;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(0,246,70,.1);border:1px solid rgba(0,246,70,.25);border-radius:100px;padding:6px 14px;margin-bottom:24px;font-size:12px;font-weight:600;color:#4de87a;letter-spacing:.08em;text-transform:uppercase}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:#4de87a;flex-shrink:0}
+.hero h1{font-size:clamp(36px,4.5vw,58px);font-weight:700;line-height:1.1;letter-spacing:-.02em;color:var(--white);margin-bottom:24px}
+.hero h1 em{font-style:normal;color:#4de87a}
+.hero-lead{font-size:17px;line-height:1.7;color:rgba(255,255,255,.7);margin-bottom:40px;max-width:480px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.2);padding:13px 26px;border-radius:10px;font-size:15px;font-weight:500;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.06)}
+.home-service-card{display:flex;flex-direction:column;background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:28px;text-decoration:none;color:inherit;transition:all .25s}
+.home-service-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);border-color:var(--border-strong)}
+.card-icon{font-size:40px;margin-bottom:12px}
+.card-link{font-size:13px;font-weight:600;color:var(--neks-teal);margin-top:16px}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr}}
+</style>
+<title>Ana Sayfa – NEKS Çevre Teknolojileri</title>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Neks_icon.png" alt="NEKS" style="height:44px;width:auto;display:block;" loading="lazy">
+    <div class="nav-brand">
+      <strong>NEKS</strong>
+      <span>Çevre Teknolojileri</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" id="nav-index">Ana Sayfa</a></li>
+    <li><a href="hakkimizda.html" id="nav-hakkimizda">Hakkımızda</a></li>
+    <li><a href="hizmetler.html" id="nav-hizmetler">Hizmetler</a></li>
+    <li><a href="yetkinlik.html" id="nav-yetkinlik">Yetkinlik</a></li>
+    <li><a href="ortaklar.html" id="nav-ortaklar">İş Ortakları</a></li>
+  </ul>
+  <a href="iletisim.html" class="nav-cta">İletişime Geçin</a>
+  <button class="nav-mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html" id="nav-index">Ana Sayfa</a>
+  <a href="hakkimizda.html" id="nav-hakkimizda">Hakkımızda</a>
+  <a href="hizmetler.html" id="nav-hizmetler">Hizmetler</a>
+  <a href="yetkinlik.html" id="nav-yetkinlik">Yetkinlik</a>
+  <a href="ortaklar.html" id="nav-ortaklar">İş Ortakları</a>
+  <a href="iletisim.html" class="nav-cta" style="margin-top:10px;width:100%;text-align:center;">İletişime Geçin</a>
+</div>
+
+<section class="hero">
+  <video class="hero-video-bg" autoplay muted playsinline loop preload="metadata" poster="ana_sayfa.jpg">
+    <source src="nes_med.mp4" type="video/mp4">
+  </video>
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Bilimsel Temelli · Uygulamaya Dönük</div>
+      <h1>Çevre Mühendisliğini<br><em>Stratejik Avantaja</em><br>Dönüştürün</h1>
+      <p class="hero-lead">Çevre teknolojileri, sürdürülebilirlik ve ileri Ar-Ge alanlarında akademik bilgi birikimi ile saha deneyimini birleştiren bütüncül bir mühendislik yaklaşımı.</p>
+      <div class="hero-actions">
+        <a href="hizmetler.html" class="btn btn-primary">Hizmetlerimizi İnceleyin →</a>
+        <a href="iletisim.html" class="btn btn-ghost">İletişime Geçin</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--light-bg);padding:72px 5%;">
+  <div class="container">
+    <span class="section-eyebrow">Çalışma Alanları</span>
+    <h2 class="section-title">Ne Yapıyoruz?</h2>
+    <p class="section-lead">Üç ana eksen üzerinde kurumların çevresel performansını artıran, maliyetleri düşüren ve sürdürülebilirlik hedeflerine ulaştıran hizmetler sunuyoruz.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
+      <a href="hizmetler.html" class="home-service-card">
+        <div class="card-icon">🌿</div>
+        <h3>Sürdürülebilirlik ve Uyum</h3>
+        <p>GRI raporlaması, LCA, karbon &amp; su ayak izi, AB Yeşil Mutabakatı uyumu.</p>
+        <span class="card-link">Detaylar →</span>
+      </a>
+      <a href="hizmetler.html" class="home-service-card">
+        <div class="card-icon">⚙️</div>
+        <h3>Çevre Teknolojileri</h3>
+        <p>Atık, atıksu, çamur, emisyon yönetimi; kaynak verimliliği ve temiz üretim.</p>
+        <span class="card-link">Detaylar →</span>
+      </a>
+      <a href="hizmetler.html" class="home-service-card">
+        <div class="card-icon">🔭</div>
+        <h3>Ar-Ge ve Proje Geliştirme</h3>
+        <p>TÜBİTAK, AB Horizon, LIFE fon başvuruları; patent ve inovasyon yönetimi.</p>
+        <span class="card-link">Detaylar →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section style="padding:72px 5%;">
+  <div class="container" style="display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;">
+    <div>
+      <span class="section-eyebrow">NEKS Farkı</span>
+      <h2 class="section-title">Akademi ile Saha Arasında Köprü</h2>
+      <p style="font-size:16px;color:var(--text-mid);line-height:1.75;margin-bottom:20px;">Prof. Dr. Nezih Kamil Salihoğlu'nun Bursa Uludağ Üniversitesi'ndeki 25+ yıllık akademik kariyeri ile sanayi projelerinden elde edilen saha deneyimi, NEKS'i alanında farklı kılan temel güçtür.</p>
+      <p style="font-size:16px;color:var(--text-mid);line-height:1.75;margin-bottom:32px;">Teorik bilgiyi sahaya aktarır, Ar-Ge çıktılarını gerçek projelere dönüştürür ve sürdürülebilirlik kavramını ekonomik olarak uygulanabilir hale getiririz.</p>
+      <a href="hakkimizda.html" class="btn btn-dark">Hakkımızda →</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="pillar"><div class="pillar-icon blue">🎯</div><div><h3>Bilimsel Doğruluk</h3><p>Akademik literatür ve uluslararası standartlara dayalı teknik içerik.</p></div></div>
+      <div class="pillar"><div class="pillar-icon teal">🔬</div><div><h3>Saha Uygulanabilirliği</h3><p>Mühendislik gerçekliği ve operasyonel kısıtları gözeten pratik çözümler.</p></div></div>
+      <div class="pillar"><div class="pillar-icon green">📈</div><div><h3>Ekonomik Sürdürülebilirlik</h3><p>Kurumsal fayda ve uzun vadeli değer yaratmaya odaklı yaklaşım.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-banner">
+  <div class="cta-inner">
+    <div><h2>Projenizi Birlikte Hayata Geçirelim</h2><p>Kurumunuza özel teknik danışmanlık ve stratejik çözüm geliştirme için iletişime geçin.</p></div>
+    <a href="iletisim.html" class="btn btn-primary">Hemen Başlayalım →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div>
+        <h3 style="color:white;margin-bottom:16px;font-size:18px;font-weight:700;"><strong>NEKS</strong> Çevre Teknolojileri</h3>
+        <h4 style="color:white;margin-bottom:8px;">Email</h4>
+        <p><a href="mailto:nekscevre@gmail.com" style="color:white;text-decoration:none;">nekscevre@gmail.com</a></p>
+      </div>
+      <div>
+        <h4 style="color:white;margin-bottom:8px;margin-top:16px;">Konum</h4>
+        <p>Bursa Uludağ Üniversitesi, Görükle Kampüsü Üniversite 1 Cad. No:933/B027 NİLÜFER / BURSA</p>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Hizmetler</h4>
+      <ul>
+        <li><a href="hizmetler.html">Sürdürülebilirlik Danışmanlığı</a></li>
+        <li><a href="hizmetler.html">Çevre Teknolojileri</a></li>
+        <li><a href="hizmetler.html">Ar-Ge ve İnovasyon</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Şirket</h4>
+      <ul>
+        <li><a href="hakkimizda.html">Hakkımızda</a></li>
+        <li><a href="hakkimizda.html">Akademik Yetkinlik</a></li>
+        <li><a href="yetkinlik.html">Uzmanlık Alanları</a></li>
+        <li><a href="ortaklar.html">İş Ortakları</a></li>
+        <li><a href="iletisim.html">İletişim</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>İletişim</h4>
+      <ul>
+        <li><a href="iletisim.html">Mesaj Gönderin</a></li>
+        <li><a href="iletisim.html">Proje Talebi</a></li>
+        <li style="pointer-events:none;"><a style="cursor:default;color:rgba(255,255,255,.5);">Bursa, Türkiye</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>
+      <div class="logo-text">NEKS Çevre Teknolojileri ve Yönetimi Ltd. Şti.</div>
+      <div class="logo-sub">© 2025 · Tüm Hakları Saklıdır · Bursa, Türkiye</div>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,.3);">Bilimsel Temelli · Uygulamaya Dönük · Sürdürülebilir</div>
+  </div>
+</footer>
+<script src="neks-scripts-optimized.js" defer></script>
+</body>
+</html>

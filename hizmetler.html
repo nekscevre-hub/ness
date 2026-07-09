@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="NEKS hizmetleri - Sürdürülebilirlik danışmanlığı, çevre teknolojileri, Ar-Ge">
+<meta name="theme-color" content="#082650">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="neks-styles-optimized.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="neks-styles-optimized.css"></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+.service-block{padding:56px 0;}
+.service-number{font-size:80px;font-weight:800;color:rgba(8,38,80,.05);line-height:0.7;margin-bottom:0;letter-spacing:-.04em;margin-top:-10px;}
+.service-content{}
+.service-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;margin-bottom:36px;}
+.service-icon-lg{font-size:56px;flex-shrink:0;width:88px;height:88px;background:rgba(4,86,78,.07);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;}
+.service-motto{font-size:14px;font-weight:600;color:var(--neks-teal);font-style:italic;margin-bottom:14px;}
+.service-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.service-detail-card{background:var(--light-bg);border-radius:var(--radius);padding:20px;border:1px solid var(--border);transition:all .2s;}
+.service-detail-card:hover{border-color:var(--border-strong);background:var(--white);box-shadow:var(--shadow);}
+.service-detail-card h4{font-size:14px;font-weight:700;margin-bottom:7px;color:var(--text-dark);}
+.service-detail-card p{font-size:13px;color:var(--text-mid);line-height:1.6;}
+.service-divider{height:1px;background:var(--border);margin:0 0 16px;}
+@media(max-width:900px){.service-detail-grid{grid-template-columns:1fr 1fr;}.service-top{flex-direction:column;}.service-icon-lg{display:none;}}
+</style>
+<title>Hizmetler – NEKS Çevre Teknolojileri</title>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Neks_icon.png" alt="NEKS" style="height:44px;width:auto;display:block;" loading="lazy">
+    <div class="nav-brand">
+      <strong>NEKS</strong>
+      <span>Çevre Teknolojileri</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" id="nav-index">Ana Sayfa</a></li>
+    <li><a href="hakkimizda.html" id="nav-hakkimizda">Hakkımızda</a></li>
+    <li><a href="hizmetler.html" id="nav-hizmetler">Hizmetler</a></li>
+    <li><a href="yetkinlik.html" id="nav-yetkinlik">Yetkinlik</a></li>
+    <li><a href="ortaklar.html" id="nav-ortaklar">İş Ortakları</a></li>
+  </ul>
+  <a href="iletisim.html" class="nav-cta">İletişime Geçin</a>
+  <button class="nav-mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html" id="nav-index">Ana Sayfa</a>
+  <a href="hakkimizda.html" id="nav-hakkimizda">Hakkımızda</a>
+  <a href="hizmetler.html" id="nav-hizmetler">Hizmetler</a>
+  <a href="yetkinlik.html" id="nav-yetkinlik">Yetkinlik</a>
+  <a href="ortaklar.html" id="nav-ortaklar">İş Ortakları</a>
+  <a href="iletisim.html" class="nav-cta" style="margin-top:10px;width:100%;text-align:center;">İletişime Geçin</a>
+</div>
+
+<div class="page-header">
+  <div class="page-header-bg"></div>
+  <div class="page-header-grid"></div>
+  <div class="page-header-inner">
+    <div class="page-eyebrow">Ne Sunuyoruz</div>
+    <h1>Hizmet <em>Alanlarımız</em></h1>
+    <p>Her bir hizmet alanı teknik doğruluk, mevzuat uyumu, çevresel performans ve stratejik gelişim ekseninde kurgulanmıştır.</p>
+  </div>
+</div>
+
+<img src="arge.jpg" alt="NEKS Ar-Ge ve Hizmetler" style="width:100%;display:block;" loading="lazy">
+
+<section style="background:var(--white);">
+  <div class="container">
+    <div class="service-block">
+      <div class="service-number">01</div>
+      <div class="service-content">
+        <div class="service-top">
+          <div>
+            <span class="card-tag">Sürdürülebilirlik</span>
+            <h2 class="section-title" style="margin-bottom:8px;">Sürdürülebilirlik ve Uyum Danışmanlığı</h2>
+            <p class="service-motto">"Güvenilir Veri, Güçlü Kurumsal İtibar"</p>
+            <p style="font-size:16px;color:var(--text-mid);line-height:1.75;max-width:600px;">Değişen küresel standartlarda sadece ayakta kalmanızı değil, öncü olmanızı sağlıyoruz. Çevresel etkinizi minimize ederken raporlama kapasitenizi en üst seviyeye çıkarıyoruz.</p>
+          </div>
+          <div class="service-icon-lg">🌿</div>
+        </div>
+        <div class="service-detail-grid">
+          <div class="service-detail-card"><h4>Sürdürülebilirlik Raporlaması</h4><p>Kurumsal performansınızı uluslararası standartlarda (GRI, SKDM) görünür kılıyoruz. Veri yapısı oluşturma, raporlama içeriği ve ekip eğitimi dahil.</p></div>
+          <div class="service-detail-card"><h4>Yaşam Döngüsü Analizi (LCA)</h4><p>Ürün ve süreçlerinizin "beşikten mezara" çevresel etkisini ISO 14040/44 uyumlu, SimaPro ile bilimsel verilerle ortaya koyuyoruz.</p></div>
+          <div class="service-detail-card"><h4>Karbon ve Su Ayak İzi</h4><p>Emisyonlarınızı ve su kullanımınızı analiz ederek azaltım stratejileri ve net-sıfır hedefleri oluşturuyoruz.</p></div>
+          <div class="service-detail-card"><h4>Mevzuat Uyumu ve Risk Yönetimi</h4><p>AB Yeşil Mutabakatı, SKDM ve ulusal/uluslararası düzenlemelere tam uyum sağlayarak operasyonel risklerinizi yönetiyoruz.</p></div>
+          <div class="service-detail-card"><h4>ESG Öncelik Alanları</h4><p>Kurumsal ESG performans göstergelerinin belirlenmesi, mevcut durum analizi ve gelişim önceliklerinin tanımlanması.</p></div>
+          <div class="service-detail-card"><h4>Sürdürülebilirlik Eğitimi</h4><p>Raporlama ekiplerine yönelik kapasite geliştirme eğitimleri ve kurumsal sürdürülebilirlik kültürü oluşturma.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-divider"></div>
+
+    <div class="service-block">
+      <div class="service-number">02</div>
+      <div class="service-content">
+        <div class="service-top">
+          <div>
+            <span class="card-tag">Teknoloji</span>
+            <h2 class="section-title" style="margin-bottom:8px;">Çevre Teknolojileri ve Kaynak Yönetimi</h2>
+            <p class="service-motto">"Mühendislik Hassasiyeti, Operasyonel Verimlilik"</p>
+            <p style="font-size:16px;color:var(--text-mid);line-height:1.75;max-width:600px;">Atık ve kaynak yönetimini bir maliyet kalemi olmaktan çıkarıp döngüsel ekonominin bir parçası haline getiriyoruz. Teknik darboğazlara akademik tabanlı mühendislik çözümleri sunuyoruz.</p>
+          </div>
+          <div class="service-icon-lg">⚙️</div>
+        </div>
+        <div class="service-detail-grid">
+          <div class="service-detail-card"><h4>Entegre Atık ve Çamur Yönetimi</h4><p>Patentli (TR 2013 11364 B) yenilenebilir enerji destekli hibrit kurutma sistemleri ile arıtma çamurlarında yüksek verimli çözümler.</p></div>
+          <div class="service-detail-card"><h4>İleri Atıksu Yönetimi</h4><p>Proses değerlendirme, geri kazanım sistemleri tasarımı ve deşarj kalitesi optimizasyonu; yağmursuyu yönetimi dahil.</p></div>
+          <div class="service-detail-card"><h4>Kaynak Verimliliği ve Temiz Üretim</h4><p>Hammadde, enerji ve su kullanımında kayıpları kaynağında belirleyerek maliyet düşürücü iyileştirmeler geliştiriyoruz.</p></div>
+          <div class="service-detail-card"><h4>Hava Kalitesi ve Emisyon Kontrolü</h4><p>Endüstriyel emisyonların izlenmesi ve kontrol teknolojilerinin seçimi konusunda teknik danışmanlık.</p></div>
+          <div class="service-detail-card"><h4>Proses Analizi ve Optimizasyon</h4><p>Kütle ve enerji dengesi hesaplamaları, operasyonel verimlilik analizi ve süreç iyileştirme önerileri.</p></div>
+          <div class="service-detail-card"><h4>Tehlikeli Atık Yönetimi</h4><p>Endüstriyel tehlikeli atıkların sınıflandırılması, bertaraf yöntemleri ve yasal mevzuat gereklilikleri danışmanlığı.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-divider"></div>
+
+    <div class="service-block">
+      <div class="service-number">03</div>
+      <div class="service-content">
+        <div class="service-top">
+          <div>
+            <span class="card-tag">Ar-Ge</span>
+            <h2 class="section-title" style="margin-bottom:8px;">Ar-Ge, İnovasyon ve Proje Geliştirme</h2>
+            <p class="service-motto">"Geleceğin Teknolojilerini Bugünden Şekillendirin"</p>
+            <p style="font-size:16px;color:var(--text-mid);line-height:1.75;max-width:600px;">Yeni fikirleri sahaya inen çözümlere dönüştürüyoruz. Üniversite-sanayi iş birliği ruhunu profesyonel proje yönetimi disipliniyle birleştiriyoruz.</p>
+          </div>
+          <div class="service-icon-lg">🔭</div>
+        </div>
+        <div class="service-detail-grid">
+          <div class="service-detail-card"><h4>Yenilikçi Çevre Teknolojileri</h4><p>Fikir aşamasından prototipe, pilot tesisten ticarileşmeye kadar Ar-Ge süreçlerinin tam yönetimi.</p></div>
+          <div class="service-detail-card"><h4>Stratejik Fon Yönetimi</h4><p>TÜBİTAK, KOSGEB, AB Horizon, ERASMUS, LIFE ve Kalkınma Ajansı projeleri için teknik kurgu ve başvuru dosyası hazırlama.</p></div>
+          <div class="service-detail-card"><h4>Teknik Şartname ve İhale</h4><p>Mühendislik projeleri için uluslararası standartlarda şartnameler hazırlama ve teklif değerlendirme süreç yönetimi.</p></div>
+          <div class="service-detail-card"><h4>Uygulamalı Eğitim</h4><p>Teknik ekiplere güncel çevre teknolojileri ve sürdürülebilirlik vizyonu kazandıracak uzmanlık eğitimleri.</p></div>
+          <div class="service-detail-card"><h4>Patent Geliştirme</h4><p>Yenilikçi çevre çözümleri için patent hazırlama, fikri mülkiyet yönetimi ve ticarileştirme stratejisi.</p></div>
+          <div class="service-detail-card"><h4>Akademi-Sanayi Entegrasyonu</h4><p>Üniversite kaynaklı projelerin reel sektörde karşılık bulmasını sağlayan köprü danışmanlığı.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-banner">
+  <div class="cta-inner">
+    <div><h2>Hangi Hizmet Size Uygun?</h2><p>Kurumunuzun ihtiyaçlarını birlikte değerlendirelim.</p></div>
+    <a href="iletisim.html" class="btn btn-primary">Bize Yazın →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <strong style="color:white;font-size:17px;letter-spacing:.04em;">NEKS</strong>
+      <p>Çevre mühendisliği, sürdürülebilirlik ve Ar-Ge alanlarında bilimsel temelli, uygulamaya dönük çözümler. Bursa, Türkiye.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Hizmetler</h4>
+      <ul>
+        <li><a href="hizmetler.html">Sürdürülebilirlik Danışmanlığı</a></li>
+        <li><a href="hizmetler.html">Çevre Teknolojileri</a></li>
+        <li><a href="hizmetler.html">Ar-Ge ve İnovasyon</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Şirket</h4>
+      <ul>
+        <li><a href="hakkimizda.html">Hakkımızda</a></li>
+        <li><a href="hakkimizda.html">Akademik Yetkinlik</a></li>
+        <li><a href="yetkinlik.html">Uzmanlık Alanları</a></li>
+        <li><a href="ortaklar.html">İş Ortakları</a></li>
+        <li><a href="iletisim.html">İletişim</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>İletişim</h4>
+      <ul>
+        <li><a href="iletisim.html">Mesaj Gönderin</a></li>
+        <li><a href="iletisim.html">Proje Talebi</a></li>
+        <li style="pointer-events:none;"><a style="cursor:default;color:rgba(255,255,255,.5);">Bursa, Türkiye</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>
+      <div class="logo-text">NEKS Çevre Teknolojileri ve Yönetimi Ltd. Şti.</div>
+      <div class="logo-sub">© 2025 · Tüm Hakları Saklıdır · Bursa, Türkiye</div>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,.3);">Bilimsel Temelli · Uygulamaya Dönük · Sürdürülebilir</div>
+  </div>
+</footer>
+<script src="neks-scripts-optimized.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+# NEKS Çevre Teknolojileri - robots.txt
+# Arama motoru crawlerları için talimatlar
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Disallow: *.pdf$
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://nekscevre.com/sitemap.xml
+
+# Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0.1
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
