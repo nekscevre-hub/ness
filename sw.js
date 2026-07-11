@@ -3,15 +3,14 @@
  * Offline support, caching strategy, background sync
  */
 
-const CACHE_NAME = 'neks-v1';
+const CACHE_NAME = 'neks-v2';
 const ASSETS_TO_CACHE = [
   '/',
-  '/index.html',
-  '/hakkimizda.html',
-  '/hizmetler.html',
-  '/yetkinlik.html',
-  '/ortaklar.html',
-  '/iletisim.html',
+  '/hakkimizda',
+  '/hizmetler',
+  '/yetkinlik',
+  '/ortaklar',
+  '/iletisim',
   '/neks-styles-optimized.css',
   '/neks-scripts-optimized.js',
   '/Neks_icon.png'

@@ -62,15 +62,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // 2. ACTIVE NAVIGATION LINK
   // ============================================
   function setActiveNavLink() {
-    const path = window.location.pathname;
-    const currentPage = path.split('/').pop() || 'index.html';
-    const isHome = path === '/' || currentPage === '' || currentPage === 'index.html';
+    const toSlug = (p) => (p || '').split('#')[0].split('?')[0]
+      .replace(/\/+$/, '').split('/').pop().replace(/\.html$/, '');
+    const currentSlug = toSlug(window.location.pathname);
+    const isHome = currentSlug === '' || currentSlug === 'index';
     const navLinks = document.querySelectorAll('.nav-links a, .mobile-menu a');
 
     navLinks.forEach(link => {
-      const href = link.getAttribute('href');
-      const linkIsHome = href === '/' || href === 'index.html' || href === '/index.html';
-      if ((isHome && linkIsHome) || href === currentPage) {
+      const hrefSlug = toSlug(link.getAttribute('href'));
+      const linkIsHome = hrefSlug === '' || hrefSlug === 'index';
+      if ((isHome && linkIsHome) || (hrefSlug && hrefSlug === currentSlug)) {
         link.classList.add('active');
       } else {
         link.classList.remove('active');
