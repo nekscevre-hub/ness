@@ -206,5 +206,21 @@ button:disabled{opacity:.6;cursor:not-allowed}
   video{max-width:100%;height:auto}
   /* Better spacing for mobile */
   h1,h2,h3,h4,h5,h6{word-spacing:0.05em;letter-spacing:inherit}
-}
+  
+  /* CRITICAL FIX: Override inline grid styles that cause overlapping on mobile */
+  div[style*="grid-template-columns:1fr 1fr"],
+  div[style*="grid-template-columns:1fr 1.3fr"],
+  div[style*="grid-template-columns:2fr 1fr"],
+  div[style*="grid-template-columns:repeat(4"],
+  div[style*="grid-template-columns:repeat(5"],
+  div[style*="grid-template-columns:repeat(3"]{
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  
+  /* Form fields - reduce gap on mobile */
+  div[style*="grid-template-columns:1fr 1fr;gap:16px"]{
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
 }
