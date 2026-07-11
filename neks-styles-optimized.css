@@ -1341,3 +1341,54 @@ video {
     padding: 40px;
   }
 }
+
+/* ===================================================== */
+/* MOBILE REFINEMENTS (v2.1) — readability & layout fixes */
+/* ===================================================== */
+
+/* Keep short numeric/stat grids as 2 columns instead of one tall stack */
+@media (max-width: 768px) {
+  div[style*="repeat(4"],
+  div[style*="repeat(5"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Re-apply 2-col for number cards after the blanket 1fr override above */
+  div[style*="repeat(4"],
+  div[style*="repeat(5"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 14px !important;
+  }
+
+  /* More readable body & UI text on phones (was shrinking too aggressively) */
+  body { font-size: 15px; }
+  .section-lead { font-size: 15px; }
+  .card p { font-size: 14px; }
+  .card h3 { font-size: 16px; }
+  .page-header p { font-size: 15px; }
+  .footer-col a { font-size: 13px; }
+  .footer-col h4 { font-size: 12px; }
+  .service-items li { font-size: 14px; }
+
+  /* Number cards a touch smaller so 2x2 fits cleanly */
+  .card div[style*="font-size:36px"],
+  .card div[style*="font-size: 36px"] { font-size: 30px !important; }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 14px; }
+  .section-lead { font-size: 14px; }
+  .card p { font-size: 13px; }
+  .card h3 { font-size: 15px; }
+  .page-header p { font-size: 14px; }
+  .cta-inner p { font-size: 13px; }
+  .footer-col a { font-size: 12px; }
+  .footer-col h4 { font-size: 11px; }
+  .footer-brand h4 { font-size: 11px; }
+  .footer-brand p { font-size: 12px; }
+  .service-items li { font-size: 13px; }
+  .btn, .btn-primary, .btn-dark, .btn-outline { font-size: 14px; }
+}
