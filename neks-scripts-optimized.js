@@ -1,50 +1,70 @@
 /**
  * NEKS Çevre Teknolojileri - Optimized Scripts
  * Mobile Menu, Form Validation, Navigation & Interactive Features
+ * v2.0 - Fully Mobile Optimized
  */
 
-// ============================================
-// 1. MOBILE MENU FUNCTIONALITY
-// ============================================
 document.addEventListener('DOMContentLoaded', function() {
+  'use strict';
+
+  // ============================================
+  // 1. MOBILE MENU FUNCTIONALITY
+  // ============================================
   const menuToggle = document.querySelector('.nav-mobile-toggle');
   const mobileMenu = document.querySelector('.mobile-menu');
   const mobileLinks = document.querySelectorAll('.mobile-menu a');
-  
+  const body = document.body;
+
   // Toggle mobile menu
   if (menuToggle) {
-    menuToggle.addEventListener('click', function() {
-      menuToggle.classList.toggle('active');
+    menuToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      const isActive = menuToggle.classList.toggle('active');
       mobileMenu.classList.toggle('active');
+      // Prevent body scroll when menu is open
+      body.style.overflow = isActive ? 'hidden' : '';
     });
   }
-  
+
   // Close menu when link is clicked
   mobileLinks.forEach(link => {
     link.addEventListener('click', function() {
       menuToggle.classList.remove('active');
       mobileMenu.classList.remove('active');
+      body.style.overflow = '';
     });
   });
-  
+
   // Close menu when clicking outside
   document.addEventListener('click', function(event) {
-    const isClickInsideMenu = mobileMenu.contains(event.target);
-    const isClickInsideToggle = menuToggle.contains(event.target);
-    
-    if (!isClickInsideMenu && !isClickInsideToggle && mobileMenu.classList.contains('active')) {
-      menuToggle.classList.remove('active');
-      mobileMenu.classList.remove('active');
+    if (mobileMenu && menuToggle) {
+      const isClickInsideMenu = mobileMenu.contains(event.target);
+      const isClickInsideToggle = menuToggle.contains(event.target);
+
+      if (!isClickInsideMenu && !isClickInsideToggle && mobileMenu.classList.contains('active')) {
+        menuToggle.classList.remove('active');
+        mobileMenu.classList.remove('active');
+        body.style.overflow = '';
+      }
     }
   });
-  
+
+  // Close menu on escape key
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('active')) {
+      menuToggle.classList.remove('active');
+      mobileMenu.classList.remove('active');
+      body.style.overflow = '';
+    }
+  });
+
   // ============================================
   // 2. ACTIVE NAVIGATION LINK
   // ============================================
   function setActiveNavLink() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const navLinks = document.querySelectorAll('.nav-links a, .mobile-menu a');
-    
+
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
       if (href === currentPage || (currentPage === '' && href === 'index.html')) {
@@ -54,65 +74,74 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-  
+
   setActiveNavLink();
-  
+
   // ============================================
   // 3. CONTACT FORM FUNCTIONALITY
   // ============================================
-  const contactForm = document.querySelector('.contact-form-wrap');
-  if (contactForm) {
+  const contactFormWrap = document.querySelector('.contact-form-wrap');
+
+  if (contactFormWrap) {
+    const form = contactFormWrap.querySelector('form');
     const formInputs = {
-      name: contactForm.querySelector('input[placeholder*="Adınız"]'),
-      email: contactForm.querySelector('input[placeholder*="email"]'),
-      company: contactForm.querySelector('input[placeholder*="Kurumunuz"]'),
-      phone: contactForm.querySelector('input[placeholder*="+90"]'),
-      service: contactForm.querySelector('select'),
-      message: contactForm.querySelector('textarea')
+      name: contactFormWrap.querySelector('input[name="name"]'),
+      email: contactFormWrap.querySelector('input[name="email"]'),
+      company: contactFormWrap.querySelector('input[name="company"]'),
+      phone: contactFormWrap.querySelector('input[name="phone"]'),
+      service: contactFormWrap.querySelector('select[name="service"]'),
+      message: contactFormWrap.querySelector('textarea[name="message"]')
     };
-    
-    const submitButton = contactForm.querySelector('.btn-dark');
-    
+
+    const submitButton = contactFormWrap.querySelector('.btn-dark') || contactFormWrap.querySelector('button[type="submit"]');
+
+    // Email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     // Form validation function
     function validateForm() {
       const errors = [];
-      
+
       if (!formInputs.name || !formInputs.name.value.trim()) {
         errors.push('Ad Soyad gereklidir');
+        formInputs.name?.classList.add('error');
+      } else {
+        formInputs.name?.classList.remove('error');
       }
-      
+
       if (!formInputs.email || !formInputs.email.value.trim()) {
         errors.push('E-posta gereklidir');
-      } else if (!isValidEmail(formInputs.email.value)) {
+        formInputs.email?.classList.add('error');
+      } else if (!emailRegex.test(formInputs.email.value)) {
         errors.push('Geçerli bir e-posta adresi girin');
+        formInputs.email?.classList.add('error');
+      } else {
+        formInputs.email?.classList.remove('error');
       }
-      
+
       if (!formInputs.message || !formInputs.message.value.trim()) {
         errors.push('Mesaj gereklidir');
+        formInputs.message?.classList.add('error');
+      } else {
+        formInputs.message?.classList.remove('error');
       }
-      
+
       return errors;
     }
-    
-    // Email validation helper
-    function isValidEmail(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-    }
-    
+
     // Form submit handler
     if (submitButton) {
       submitButton.addEventListener('click', async function(e) {
         e.preventDefault();
-        
+
         // Validate form
         const errors = validateForm();
-        
+
         if (errors.length > 0) {
-          alert('Lütfen aşağıdaki hatalarını düzeltiniz:\n\n' + errors.join('\n'));
+          alert('Lütfen aşağıdaki hataları düzeltiniz:\n\n' + errors.join('\n'));
           return;
         }
-        
+
         // Prepare form data
         const formData = {
           name: formInputs.name.value.trim(),
@@ -123,43 +152,54 @@ document.addEventListener('DOMContentLoaded', function() {
           message: formInputs.message.value.trim(),
           timestamp: new Date().toISOString()
         };
-        
+
         // Show loading state
         submitButton.disabled = true;
         const originalText = submitButton.textContent;
         submitButton.textContent = 'Gönderiliyor...';
-        
+
         try {
-          // Send to Netlify Forms (if deployed on Netlify)
-          const response = await fetch('/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-              'form-name': 'contact',
-              'name': formData.name,
-              'email': formData.email,
-              'company': formData.company,
-              'phone': formData.phone,
-              'service': formData.service,
-              'message': formData.message
-            }).toString()
-          });
-          
-          if (response.ok) {
-            // Success message
-            alert('✓ Mesajınız başarıyla gönderildi!\n\nEn kısa sürede sizinle iletişime geçeceğiz.');
-            
-            // Reset form
-            contactForm.querySelector('form') ? contactForm.querySelector('form').reset() : resetFormInputs();
-            
-          } else {
-            throw new Error('Form gönderilemedi');
+          // If form has Netlify attributes, let it handle it
+          if (form && form.getAttribute('name') === 'contact') {
+            // Submit via Netlify Forms
+            const response = await fetch('/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: new URLSearchParams({
+                'form-name': 'contact',
+                'name': formData.name,
+                'email': formData.email,
+                'company': formData.company,
+                'phone': formData.phone,
+                'service': formData.service,
+                'message': formData.message
+              }).toString()
+            });
+
+            if (response.ok) {
+              // Success message
+              alert('✓ Mesajınız başarıyla gönderildi!\n\nEn kısa sürede sizinle iletişime geçeceğiz.');
+
+              // Reset form
+              if (form) {
+                form.reset();
+              } else {
+                resetFormInputs();
+              }
+
+              // Clear error classes
+              Object.values(formInputs).forEach(input => {
+                if (input) input.classList.remove('error');
+              });
+            } else {
+              throw new Error('Form gönderilemedi');
+            }
           }
         } catch (error) {
           console.error('Form submission error:', error);
-          
+
           // Fallback: Show email and instructions
-          alert('Mesaj gönderilemedi. Lütfen doğrudan aşağıdaki e-posta adresine yazınız:\n\nnekscevre@gmail.com\n\nAdınız: ' + formData.name + '\nKonu: ' + formData.service);
+          alert('Mesaj gönderilemedi.\n\nLütfen doğrudan aşağıdaki adrese yazınız:\nE-posta: nekscevre@gmail.com\n\nAdınız: ' + formData.name);
         } finally {
           // Reset button state
           submitButton.disabled = false;
@@ -167,15 +207,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     }
-    
+
     // Helper function to reset form inputs manually
     function resetFormInputs() {
       Object.values(formInputs).forEach(input => {
         if (input) input.value = '';
       });
     }
+
+    // Add real-time validation feedback
+    if (formInputs.email) {
+      formInputs.email.addEventListener('blur', function() {
+        if (this.value && !emailRegex.test(this.value)) {
+          this.classList.add('error');
+        } else {
+          this.classList.remove('error');
+        }
+      });
+    }
+
+    // Prevent form submission with Enter key in message field (allow line breaks)
+    if (formInputs.message) {
+      formInputs.message.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.ctrlKey) {
+          submitButton.click();
+        }
+      });
+    }
   }
-  
+
   // ============================================
   // 4. SMOOTH SCROLL BEHAVIOR
   // ============================================
@@ -186,12 +246,24 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         const target = document.querySelector(href);
         if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Close mobile menu if open
+          if (mobileMenu && mobileMenu.classList.contains('active')) {
+            menuToggle.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            body.style.overflow = '';
+          }
+          // Scroll to target
+          const headerHeight = document.querySelector('nav')?.offsetHeight || 0;
+          const targetPosition = target.offsetTop - headerHeight;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
         }
       }
     });
   });
-  
+
   // ============================================
   // 5. FORM INPUT ENHANCEMENTS
   // ============================================
@@ -202,7 +274,17 @@ document.addEventListener('DOMContentLoaded', function() {
       this.value = this.value.replace(/[^\d\s+\-()]/g, '');
     });
   });
-  
+
+  // Number input formatting
+  const numberInputs = document.querySelectorAll('input[type="number"]');
+  numberInputs.forEach(input => {
+    input.addEventListener('change', function() {
+      if (this.value && isNaN(this.value)) {
+        this.value = '';
+      }
+    });
+  });
+
   // ============================================
   // 6. LAZY LOADING & PERFORMANCE
   // ============================================
@@ -212,15 +294,18 @@ document.addEventListener('DOMContentLoaded', function() {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const img = entry.target;
-          img.src = img.src; // Trigger load
+          // Force reload
+          img.src = img.src;
           observer.unobserve(img);
         }
       });
+    }, {
+      rootMargin: '50px'
     });
-    
+
     images.forEach(img => imageObserver.observe(img));
   }
-  
+
   // ============================================
   // 7. VIDEO AUTOPLAY OPTIMIZATION
   // ============================================
@@ -230,57 +315,80 @@ document.addEventListener('DOMContentLoaded', function() {
     video.muted = true;
     video.play().catch(error => {
       console.log('Autoplay prevented:', error);
-      // Fallback: show poster
-      video.controls = true;
+      // Fallback: show controls
+      video.controls = false;
     });
   }
-  
+
   // ============================================
-  // 8. ANALYTICS & TRACKING (Optional)
-  // ============================================
-  // Track page views
-  function trackPageView() {
-    const pageTitle = document.title;
-    const pagePath = window.location.pathname;
-    
-    if (window.gtag) {
-      gtag('config', 'GA_MEASUREMENT_ID', {
-        'page_title': pageTitle,
-        'page_path': pagePath
-      });
-    }
-  }
-  
-  trackPageView();
-  
-  // ============================================
-  // 9. ACCESSIBILITY IMPROVEMENTS
+  // 8. ACCESSIBILITY IMPROVEMENTS
   // ============================================
   // Add focus visible styles for keyboard navigation
+  let isKeyboardNavigation = false;
+
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Tab') {
-      document.body.classList.add('keyboard-nav');
+      isKeyboardNavigation = true;
+      body.classList.add('keyboard-nav');
     }
   });
-  
+
   document.addEventListener('mousedown', function() {
-    document.body.classList.remove('keyboard-nav');
+    isKeyboardNavigation = false;
+    body.classList.remove('keyboard-nav');
   });
-  
+
   // ============================================
-  // 10. PRINT OPTIMIZATION
+  // 9. PRINT OPTIMIZATION
   // ============================================
   window.addEventListener('beforeprint', function() {
-    document.body.style.backgroundColor = 'white';
+    body.style.backgroundColor = 'white';
   });
-  
+
   window.addEventListener('afterprint', function() {
-    document.body.style.backgroundColor = '';
+    body.style.backgroundColor = '';
   });
+
+  // ============================================
+  // 10. HANDLE ORIENTATION CHANGE
+  // ============================================
+  window.addEventListener('orientationchange', function() {
+    // Close mobile menu on orientation change
+    if (mobileMenu && mobileMenu.classList.contains('active')) {
+      menuToggle.classList.remove('active');
+      mobileMenu.classList.remove('active');
+      body.style.overflow = '';
+    }
+  });
+
+  // ============================================
+  // 11. SCROLL LOCK FOR MOBILE MENU
+  // ============================================
+  function disableBodyScroll() {
+    body.style.overflow = 'hidden';
+    body.style.paddingRight = getScrollbarWidth() + 'px';
+  }
+
+  function enableBodyScroll() {
+    body.style.overflow = '';
+    body.style.paddingRight = '';
+  }
+
+  function getScrollbarWidth() {
+    const outer = document.createElement('div');
+    outer.style.visibility = 'hidden';
+    outer.style.overflow = 'scroll';
+    document.body.appendChild(outer);
+    const inner = document.createElement('div');
+    outer.appendChild(inner);
+    const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+    outer.parentNode.removeChild(outer);
+    return scrollbarWidth;
+  }
 });
 
 // ============================================
-// 11. UTILITY FUNCTIONS
+// 12. UTILITY FUNCTIONS
 // ============================================
 
 // Check if element is in viewport
@@ -325,10 +433,67 @@ if (window.performance && window.performance.timing) {
 }
 
 // ============================================
-// 12. SERVICE WORKER REGISTRATION (Optional - for PWA)
+// 13. SERVICE WORKER REGISTRATION
 // ============================================
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(err => {
-    console.log('Service worker registration failed:', err);
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(err => {
+      console.log('Service worker registration failed:', err);
+    });
   });
 }
+
+// ============================================
+// 14. HANDLE VIEWPORT META TAG
+// ============================================
+// Ensure proper viewport settings on mobile
+window.addEventListener('load', function() {
+  const viewport = document.querySelector('meta[name="viewport"]');
+  if (!viewport) {
+    const newViewport = document.createElement('meta');
+    newViewport.name = 'viewport';
+    newViewport.content = 'width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5';
+    document.head.appendChild(newViewport);
+  }
+});
+
+// ============================================
+// 15. TOUCH-FRIENDLY ENHANCEMENTS
+// ============================================
+document.addEventListener('touchstart', function() {
+  // Reduce touch delay
+  document.body.style.touchAction = 'manipulation';
+}, { passive: true });
+
+// ============================================
+// 16. FORM STATUS MESSAGES
+// ============================================
+function showFormMessage(type, message) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'form-' + type;
+  messageDiv.textContent = message;
+
+  const form = document.querySelector('.contact-form-wrap form');
+  if (form) {
+    form.insertBefore(messageDiv, form.firstChild);
+    setTimeout(() => {
+      messageDiv.remove();
+    }, 5000);
+  }
+}
+
+// ============================================
+// 17. PREFETCH NAVIGATION LINKS
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+  const links = document.querySelectorAll('a[href*=".html"]');
+  links.forEach(link => {
+    const href = link.getAttribute('href');
+    if (href && !href.startsWith('http') && !href.startsWith('//')) {
+      const prefetchLink = document.createElement('link');
+      prefetchLink.rel = 'prefetch';
+      prefetchLink.href = href;
+      document.head.appendChild(prefetchLink);
+    }
+  });
+});
