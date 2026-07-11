@@ -62,12 +62,15 @@ document.addEventListener('DOMContentLoaded', function() {
   // 2. ACTIVE NAVIGATION LINK
   // ============================================
   function setActiveNavLink() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const path = window.location.pathname;
+    const currentPage = path.split('/').pop() || 'index.html';
+    const isHome = path === '/' || currentPage === '' || currentPage === 'index.html';
     const navLinks = document.querySelectorAll('.nav-links a, .mobile-menu a');
 
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
-      if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+      const linkIsHome = href === '/' || href === 'index.html' || href === '/index.html';
+      if ((isHome && linkIsHome) || href === currentPage) {
         link.classList.add('active');
       } else {
         link.classList.remove('active');
