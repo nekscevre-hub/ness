@@ -2,11 +2,12 @@
 command = ""
 publish = "."
 
-# Redirects for SPA routing
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+# NOT: Bu bir çok-sayfalı (multi-page) statik sitedir, SPA değildir.
+# Temiz URL'ler (/hakkimizda vb.) Netlify'ın "Pretty URLs" özelliğiyle
+# otomatik sunulur; .html -> temiz URL 301 yönlendirmeleri _redirects
+# dosyasında tanımlıdır. Bu yüzden "/* -> /index.html 200" gibi bir SPA
+# catch-all KULLANILMAZ — aksi halde var olmayan her adres ana sayfayı
+# 200 durumuyla döndürür (soft-404) ve SEO'ya zarar verir.
 
 # Form submission redirect
 [[redirects]]
