@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GRI Sürdürülebilirlik Raporlama Paneli</title>
+<title>GRI Sürdürülebilirlik Raporlama Paneli - Geliştirilmiş</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root {
     --primary: #082650;
@@ -11,11 +12,11 @@
     --accent: #0a7c6e;
     --accent-dark: #086b5d;
     --accent-light: #e6f4f1;
-    --eco: #2f6bd8;         /* GRI 200 Ekonomik */
+    --eco: #2f6bd8;
     --eco-light: #eaf1fc;
-    --env: #0a7c6e;         /* GRI 300 Çevresel */
+    --env: #0a7c6e;
     --env-light: #e6f4f1;
-    --soc: #b5560f;         /* GRI 400 Sosyal */
+    --soc: #b5560f;
     --soc-light: #fbeee2;
     --white: #ffffff;
     --light-bg: #f7f8fa;
@@ -60,7 +61,7 @@
     content: ''; position: absolute; inset: 0;
     background: radial-gradient(ellipse 55% 90% at 82% 40%, rgba(10,124,110,.34) 0%, transparent 68%);
   }
-  .page-header-inner { max-width: 980px; margin: 0 auto; position: relative; z-index: 1; }
+  .page-header-inner { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
   .page-eyebrow {
     display: inline-flex; align-items:center; gap:8px; font-size: 11px; font-weight: 700; letter-spacing: .12em;
     text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: 16px;
@@ -74,13 +75,27 @@
   .series-chip .dot { width:9px; height:9px; border-radius:50%; }
 
   /* CONTAINER */
-  .container { max-width: 980px; margin: 0 auto; padding: 56px 40px 90px; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 56px 40px 90px; }
   .section-eyebrow { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
   .section-title { font-size: 28px; font-weight: 800; color: var(--primary); margin-bottom: 12px; line-height: 1.2; letter-spacing:-.01em; }
   .section-lead { font-size: 15px; color: var(--text-muted); max-width: 640px; line-height: 1.7; margin-bottom: 36px; }
 
+  /* TABS */
+  .tab-nav { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 32px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 12px 20px; border: none; background: transparent; color: var(--text-muted);
+    font-size: 14px; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: all .2s; position: relative; top: 1px;
+  }
+  .tab-btn:hover { color: var(--primary); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fade .3s ease; }
+  @keyframes fade { from { opacity:0; } to {opacity:1; } }
+
   /* STEPS */
-  .steps-bar { display: flex; align-items: center; margin-bottom: 44px; }
+  .steps-bar { display: flex; align-items: center; margin-bottom: 44px; flex-wrap: wrap; }
   .step-item { display: flex; align-items: center; gap: 10px; }
   .step-num {
     width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--border);
@@ -95,13 +110,13 @@
 
   .panel-section { display: none; }
   .panel-section.active { display: block; animation: fade .35s ease; }
-  @keyframes fade { from { opacity:0; transform: translateY(6px);} to {opacity:1; transform:none;} }
 
   /* FORM */
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
   .form-group.full { grid-column: 1/-1; }
-  label { font-size: 13px; font-weight: 600; color: var(--primary); }
+  label { font-size: 13px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+  .label-badge { font-family: var(--mono); font-size: 10px; background: var(--eco-light); color: var(--eco); padding: 2px 6px; border-radius: 3px; font-weight: 700; }
   input[type=text], input[type=number], select, textarea {
     padding: 11px 14px; border: 1px solid var(--border); border-radius: var(--radius);
     font-size: 14px; color: var(--text-dark); font-family: inherit; background: white; outline: none;
@@ -110,7 +125,7 @@
   input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(10,124,110,.09); }
   textarea { resize: vertical; line-height: 1.6; }
   select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6a7e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
-  .hint { font-size: 12px; color: var(--text-muted); }
+  .hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 
   .btn {
     padding: 11px 22px; border-radius: var(--radius); font-size: 14px; font-weight: 600;
@@ -124,838 +139,1164 @@
   .btn-accent:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
   .btn-ghost { background: transparent; border-color: transparent; color: var(--accent); padding-left:0; }
   .btn-ghost:hover { background: transparent; text-decoration: underline; }
-  .btn-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .btn-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
 
-  /* SECTOR */
-  .sector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 8px; }
-  .sector-btn { padding: 13px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-lg); background: white; color: var(--text-dark); cursor: pointer; font-weight: 500; font-size: 13px; transition: all .15s; text-align: left; }
-  .sector-btn:hover { border-color: var(--accent); background: var(--accent-light); }
-  .sector-btn.selected { border-color: var(--accent); background: var(--accent); color: white; }
-  .sector-btn small { display:block; font-family:var(--mono); font-size:10.5px; opacity:.7; margin-top:3px; }
-
-  /* GRI CATEGORY GROUP (step 2) */
-  .cat-group { border:1px solid var(--border); border-radius: var(--radius-lg); margin-bottom:20px; overflow:hidden; }
-  .cat-head { display:flex; align-items:center; gap:12px; padding:16px 20px; }
-  .cat-head .cat-pill { font-family:var(--mono); font-size:11px; font-weight:700; padding:4px 9px; border-radius:6px; }
-  .cat-head h3 { font-size:15px; font-weight:800; color:var(--primary); }
-  .cat-head .cat-sub { font-size:12px; color:var(--text-muted); margin-left:auto; }
-  .cat-eco .cat-pill { background:var(--eco-light); color:var(--eco);} .cat-eco { border-top:3px solid var(--eco);}
-  .cat-env .cat-pill { background:var(--env-light); color:var(--env);} .cat-env { border-top:3px solid var(--env);}
-  .cat-soc .cat-pill { background:var(--soc-light); color:var(--soc);} .cat-soc { border-top:3px solid var(--soc);}
-  .metric-row { display:grid; grid-template-columns: 1fr 130px; gap:16px; align-items:center; padding:14px 20px; border-top:1px solid var(--border); }
-  .metric-row:hover { background: var(--light-bg); }
-  .metric-info { display:flex; flex-direction:column; gap:3px; }
-  .metric-name { font-size:13.5px; font-weight:600; color:var(--text-dark); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-  .code-tag { font-family:var(--mono); font-size:10.5px; font-weight:700; background:var(--primary); color:#fff; padding:2px 7px; border-radius:5px; letter-spacing:.02em; }
-  .metric-meta { font-size:11.5px; color:var(--text-muted); }
-  .metric-meta .dir { font-weight:600; }
-  .metric-input-wrap { position:relative; }
-  .metric-input-wrap input { padding-right:44px; text-align:right; }
-  .metric-unit { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--text-muted); pointer-events:none; }
-  .metric-input-wrap.info input { background:var(--light-bg); }
-
-  /* LOADING */
-  .loading-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 30px 28px; background: white; }
-  .loading-step { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-muted); opacity: 0; transform: translateY(4px); transition: all .3s; }
-  .loading-step:last-child { border-bottom: none; }
-  .loading-step.show { opacity: 1; transform: none; }
-  .step-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--accent-light); color: var(--accent); font-size: 12px; }
-
-  /* RESULTS */
-  .result-header { padding: 22px 0; border-bottom: 1px solid var(--border); margin-bottom: 30px; }
-  .result-title { font-size: 26px; font-weight: 800; color: var(--primary); margin-bottom: 14px; letter-spacing:-.01em; }
-  .badges { display: flex; gap: 8px; flex-wrap: wrap; }
-  .badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: var(--light-bg); color: var(--text-dark); }
-  .badge-blue { background: rgba(8,38,80,.08); color: var(--primary); }
-  .badge-teal { background: var(--accent-light); color: var(--accent); }
-  .badge-amber { background: rgba(255,193,7,.14); color: #a06d00; }
-  .badge-red { background: rgba(211,47,47,.12); color: #d32f2f; }
-  .badge-mono { font-family:var(--mono); }
-
-  /* SCORE HERO */
-  .score-hero { display:grid; grid-template-columns: 200px 1fr; gap:28px; align-items:center; background:var(--primary); border-radius:var(--radius-lg); padding:28px 30px; margin-bottom:26px; position:relative; overflow:hidden; }
-  .score-hero::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse 60% 90% at 90% 50%, rgba(10,124,110,.30), transparent 70%); }
-  .gauge-wrap { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; }
-  .gauge-caption { color:rgba(255,255,255,.6); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-top:10px; }
-  .hero-right { position:relative; z-index:1; color:#fff; }
-  .hero-status { font-size:13px; font-weight:700; letter-spacing:.06em; color:#4ecdc4; text-transform:uppercase; margin-bottom:6px; }
-  .hero-headline { font-size:20px; font-weight:800; margin-bottom:10px; line-height:1.3; }
-  .hero-sub { font-size:13.5px; color:rgba(255,255,255,.7); line-height:1.65; }
-
-  .cat-score-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:16px; margin-bottom:30px; }
-  .cat-score-card { border:1px solid var(--border); border-radius:var(--radius-lg); padding:18px 18px 20px; background:white; border-top-width:3px; }
-  .cat-score-card.eco { border-top-color:var(--eco);} .cat-score-card.env { border-top-color:var(--env);} .cat-score-card.soc { border-top-color:var(--soc);}
-  .csc-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
-  .csc-tag { font-family:var(--mono); font-size:11px; font-weight:700; padding:3px 8px; border-radius:5px; }
-  .cat-score-card.eco .csc-tag { background:var(--eco-light); color:var(--eco);} .cat-score-card.env .csc-tag { background:var(--env-light); color:var(--env);} .cat-score-card.soc .csc-tag { background:var(--soc-light); color:var(--soc);}
-  .csc-score { font-size:30px; font-weight:800; color:var(--primary); }
-  .csc-score span { font-size:15px; color:var(--text-muted); font-weight:600; }
-  .csc-label { font-size:13px; font-weight:600; color:var(--text-dark); margin-bottom:12px; }
-  .csc-bar { height:7px; border-radius:4px; background:var(--light-bg); overflow:hidden; }
-  .csc-bar > div { height:100%; border-radius:4px; transition: width 1s cubic-bezier(.2,.8,.2,1); }
-  .cat-score-card.eco .csc-bar>div { background:var(--eco);} .cat-score-card.env .csc-bar>div { background:var(--env);} .cat-score-card.soc .csc-bar>div { background:var(--soc);}
-  .csc-meta { font-size:11px; color:var(--text-muted); margin-top:8px; }
-
-  .finding-block { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 24px; margin-bottom: 18px; }
-  .finding-block h4 { font-size: 15px; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
-  .finding-block p { font-size: 14px; line-height: 1.75; color: var(--text-dark); }
-  .highlight-card { background: var(--accent-light); border-left: 4px solid var(--accent); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 18px; }
-  .hl-label { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
-  .highlight-card p { font-size: 14px; line-height: 1.7; color: var(--text-dark); font-weight: 500; }
-
-  /* REPORT */
-  .report-doc { background:white; }
-  .report-section { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 26px; margin-bottom: 18px; }
-  .report-section > h4 { font-size: 15px; font-weight: 800; color: var(--primary); margin-bottom: 16px; display:flex; align-items:center; gap:10px; }
-  .report-section > h4 .rs-num { font-family:var(--mono); font-size:12px; background:var(--primary); color:#fff; width:24px; height:24px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; }
-  .report-section p { font-size: 14px; line-height: 1.75; color: var(--text-dark); margin-bottom: 12px; }
-  .report-section p:last-child { margin-bottom: 0; }
-  .kv { display:grid; grid-template-columns: 190px 1fr; gap:6px 16px; font-size:13.5px; }
-  .kv dt { color:var(--text-muted); }
-  .kv dd { color:var(--text-dark); font-weight:500; }
-
-  table.gri-table { width:100%; border-collapse:collapse; font-size:12.5px; }
-  table.gri-table th { text-align:left; padding:9px 10px; background:var(--light-bg); color:var(--text-muted); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.04em; border-bottom:1px solid var(--border); }
-  table.gri-table th.num, table.gri-table td.num { text-align:right; }
-  table.gri-table td { padding:10px; border-bottom:1px solid var(--border); vertical-align:middle; }
-  table.gri-table tr:last-child td { border-bottom:none; }
-  table.gri-table .t-code { font-family:var(--mono); font-weight:700; color:var(--primary); white-space:nowrap; }
-  .pill-score { display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12px; }
-  .pill-dot { width:8px; height:8px; border-radius:50%; }
-  .sc-ok { color:var(--ok);} .sc-ok .pill-dot{background:var(--ok);}
-  .sc-warn { color:var(--warn);} .sc-warn .pill-dot{background:var(--warn);}
-  .sc-bad { color:var(--bad);} .sc-bad .pill-dot{background:var(--bad);}
-  .sc-info { color:var(--text-muted);} .sc-info .pill-dot{background:var(--border-strong);}
-
-  .list-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; line-height: 1.65; color: var(--text-dark); }
-  .list-item:last-child { border-bottom: none; }
-  .list-dot { flex-shrink: 0; width: 24px; height: 24px; border-radius: 6px; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; font-family:var(--mono); }
-  .rec-item .list-dot { background: var(--soc-light); color: var(--soc); }
-  .rec-item .rec-ref { font-family:var(--mono); font-size:11px; color:var(--accent); font-weight:700; margin-right:6px; }
-
-  .disclaimer { font-size:11.5px; color:var(--text-muted); line-height:1.6; background:var(--light-bg); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; margin-top:6px; }
-  .report-foot { text-align:center; font-size:11px; color:var(--text-muted); padding-top:20px; font-family:var(--mono); }
-
-  /* REFERENCE REPORT LINKS */
-  .ref-intro { font-size:13.5px; color:var(--text-muted); line-height:1.7; margin-bottom:16px; }
-  .ref-list { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .ref-card {
-    display:flex; flex-direction:column; gap:8px; text-decoration:none;
-    border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px 16px 14px;
-    background:white; transition:all .15s; position:relative;
+  /* SECTOR BUTTONS */
+  .sector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 32px; }
+  .sector-btn {
+    padding: 14px 16px; border: 1.5px solid var(--border); border-radius: var(--radius);
+    background: white; color: var(--text-dark); font-weight: 600; font-size: 13px;
+    cursor: pointer; transition: all .2s; text-align: center;
   }
-  .ref-card:hover { border-color:var(--accent); box-shadow:var(--shadow); transform:translateY(-1px); }
-  .ref-card.match { border-color:var(--accent); background:var(--accent-light); }
-  .ref-top { display:flex; align-items:center; justify-content:space-between; gap:8px; }
-  .ref-sector { font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--accent); }
-  .ref-match-badge { font-size:10px; font-weight:700; background:var(--accent); color:#fff; padding:2px 8px; border-radius:20px; letter-spacing:.02em; }
-  .ref-company { font-size:14.5px; font-weight:700; color:var(--primary); line-height:1.3; }
-  .ref-meta { font-size:11.5px; color:var(--text-muted); display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-  .ref-std { font-family:var(--mono); background:var(--light-bg); padding:1px 6px; border-radius:4px; }
-  .ref-open { font-size:12px; font-weight:600; color:var(--accent); margin-top:2px; display:inline-flex; align-items:center; gap:4px; }
-  .ref-dir { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px dashed var(--border); }
-  .ref-dir a { font-size:12px; color:var(--accent); text-decoration:none; font-weight:600; }
-  .ref-dir a:hover { text-decoration:underline; }
-  .ref-note { font-size:11px; color:var(--text-muted); margin-top:12px; line-height:1.6; }
-  @media (max-width:820px){ .ref-list { grid-template-columns:1fr; } }
+  .sector-btn:hover { border-color: var(--accent); background: var(--accent-light); }
+  .sector-btn.selected { background: var(--accent); color: white; border-color: var(--accent); }
 
-  @media (max-width: 820px) {
-    nav { padding: 0 18px; } .nav-right { display:none; }
-    .page-header { padding: 44px 20px 40px; } .page-header h1 { font-size: 27px; }
-    .container { padding: 40px 18px 70px; }
+  /* METRIC CARDS */
+  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-bottom: 32px; }
+  .metric-card {
+    background: white; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px; transition: all .2s;
+  }
+  .metric-card:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+  .metric-label { font-size: 12px; font-weight: 700; color: var(--text-muted); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 8px; }
+  .metric-code { font-family: var(--mono); font-size: 11px; color: var(--eco); font-weight: 700; }
+  .metric-input { width: 100%; min-width: 0; }
+  .metric-row { display: grid; grid-template-columns: 1fr 120px; gap: 12px; margin-bottom: 12px; align-items: center; }
+  .metric-row > div:last-child { text-align: right; }
+
+  /* COMPLIANCE BADGE */
+  .badge-gri {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; letter-spacing: .03em;
+  }
+  .badge-gri.required { background: #fff3cd; color: #856404; }
+  .badge-gri.recommended { background: #d1ecf1; color: #0c5460; }
+  .badge-gri.optional { background: #e2e3e5; color: #383d41; }
+
+  /* INFO BOX */
+  .info-box {
+    background: var(--eco-light); border-left: 4px solid var(--eco);
+    padding: 16px; border-radius: 6px; margin-bottom: 24px; font-size: 13px; line-height: 1.6;
+  }
+  .info-box strong { color: var(--eco); }
+  .info-box.warning { background: #fff3cd; border-left-color: #c98a00; }
+  .info-box.warning strong { color: #c98a00; }
+
+  /* REPORT STYLES */
+  .report-doc { background: white; }
+  .report-section {
+    background: white; padding: 24px; border-left: 4px solid var(--accent);
+    margin-bottom: 20px; page-break-inside: avoid;
+  }
+  .report-section h4 { font-size: 16px; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+  .rs-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; background: var(--accent); color: white;
+    border-radius: 50%; font-weight: 700; font-size: 12px;
+  }
+
+  /* TABLES */
+  .gri-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .gri-table th { background: var(--light-bg); padding: 12px; text-align: left; font-weight: 700; color: var(--primary); border-bottom: 2px solid var(--border); }
+  .gri-table td { padding: 12px; border-bottom: 1px solid var(--border); }
+  .gri-table tr:hover { background: var(--accent-light); }
+  .gri-table .num { text-align: right; font-family: var(--mono); }
+
+  /* SCORE CARDS */
+  .score-card {
+    background: white; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; text-align: center; transition: all .2s;
+  }
+  .score-card:hover { box-shadow: var(--shadow-lg); border-color: var(--accent); }
+  .score-value { font-size: 36px; font-weight: 800; color: var(--accent); font-family: var(--mono); margin-bottom: 8px; }
+  .score-label { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+
+  .list-item { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+  .list-dot { width: 24px; height: 24px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .rec-item .list-dot { background: var(--warn); }
+  .rec-ref { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--warn); margin-right: 6px; }
+
+  .disclaimer {
+    background: #f5f5f5; padding: 16px; border-radius: 6px; font-size: 12px;
+    color: var(--text-muted); line-height: 1.6; margin-top: 16px;
+  }
+
+  /* TOPIC SLIDER */
+  .topic-ctrl { display: flex; align-items: center; gap: 10px; }
+  .topic-val {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 26px; height: 22px; padding: 0 6px; border-radius: 11px;
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    background: var(--border); color: var(--text-muted); transition: all .15s;
+  }
+  .topic-val.hi { background: var(--accent-light); color: var(--accent); }
+  input[type=range].gri-topic { accent-color: var(--accent); cursor: pointer; }
+
+  @media (max-width: 768px) {
+    .container { padding: 32px 20px 60px; }
     .form-grid { grid-template-columns: 1fr; }
-    .metric-row { grid-template-columns: 1fr; gap:10px; }
-    .cat-score-grid { grid-template-columns: 1fr; }
-    .score-hero { grid-template-columns: 1fr; text-align:center; }
-    .gauge-wrap { margin:0 auto; }
-    .kv { grid-template-columns: 1fr; gap:2px 0; } .kv dd { margin-bottom:8px; }
-    table.gri-table { font-size:11.5px; } table.gri-table td, table.gri-table th { padding:7px 6px; }
+    .metrics-grid { grid-template-columns: 1fr; }
+    .metric-row { grid-template-columns: 1fr; }
+    .nav { padding: 0 20px; }
+    .page-header { padding: 40px 20px 36px; }
+    .page-header h1 { font-size: 28px; }
   }
 
   @media print {
-    nav, .page-header, .steps-bar, .no-print { display:none !important; }
-    .container { padding:0; max-width:100%; }
-    .report-section, .cat-score-card, .score-hero { break-inside: avoid; box-shadow:none; }
-    body { background:#fff; }
+    nav, .btn-row, .btn { display: none; }
+    .report-section { page-break-inside: avoid; }
   }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="#" class="nav-logo">
+  <a class="nav-logo" href="#">
     <div class="nav-mark">GRI</div>
     <div class="nav-brand">
-      <strong>SÜRDÜRÜLEBİLİRLİK RAPORLAMA</strong>
-      <span>GRI Standartları temelli değerlendirme paneli</span>
+      <strong>GRI Raporlama</strong>
+      <span>Sürdürülebilirlik Paneli</span>
     </div>
   </a>
-  <div class="nav-right">Çerçeve: <b>GRI Standards 2021+</b></div>
+  <div class="nav-right">GRI Standards 2021–2025 · <b id="status">Hazırlık Aşaması</b></div>
 </nav>
 
 <div class="page-header">
   <div class="page-header-inner">
-    <span class="page-eyebrow"><span class="tag">GRI 1 · 2 · 3</span> Global Reporting Initiative</span>
-    <h1>Kuruluşunuzun <em>GRI raporunu</em><br>verilerinizden oluşturun</h1>
-    <p>Ekonomik, çevresel ve sosyal göstergelerinizi girin; panel bunları ilgili GRI gösterge kodlarıyla eşleştirip kategori bazlı skor ve tam metin bir sürdürülebilirlik raporu üretsin.</p>
-    <div class="series-chips">
-      <div class="series-chip"><span class="dot" style="background:#4a86e8"></span>GRI 200 · Ekonomik</div>
-      <div class="series-chip"><span class="dot" style="background:#4ecdc4"></span>GRI 300 · Çevresel</div>
-      <div class="series-chip"><span class="dot" style="background:#e8955a"></span>GRI 400 · Sosyal</div>
-    </div>
+    <div class="page-eyebrow">📊 <span class="tag">GRI 1, 2, 3</span> Standartları</div>
+    <h1>GRI Sürdürülebilirlik <em>Raporlama Sistemi</em></h1>
+    <p>Kuruluşunuzun ekonomik, çevresel ve sosyal etkilerini GRI Standartları'na uygun olarak belgeleyip raporlayın.</p>
+    <div class="series-chips" id="series-chips"></div>
   </div>
 </div>
 
 <div class="container">
-  <div class="steps-bar">
-    <div class="step-item"><div class="step-num active" id="dot-0">1</div><span class="step-label active" id="lbl-0">Kuruluş Künyesi</span></div>
-    <div class="step-line"></div>
-    <div class="step-item"><div class="step-num" id="dot-1">2</div><span class="step-label" id="lbl-1">GRI Göstergeleri</span></div>
-    <div class="step-line"></div>
-    <div class="step-item"><div class="step-num" id="dot-2">3</div><span class="step-label" id="lbl-2">Analiz</span></div>
-    <div class="step-line"></div>
-    <div class="step-item"><div class="step-num" id="dot-3">4</div><span class="step-label" id="lbl-3">GRI Raporu</span></div>
+  <!-- TAB NAVİGATION -->
+  <div class="tab-nav" id="tab-nav">
+    <button class="tab-btn active" onclick="switchTab(0)">1. Kuruluş Bilgileri</button>
+    <button class="tab-btn" onclick="switchTab(1)">2. Yönetim & Stratejisi</button>
+    <button class="tab-btn" onclick="switchTab(2)">3. Material Topics</button>
+    <button class="tab-btn" onclick="switchTab(3)">4. GRI Göstergeler</button>
+    <button class="tab-btn" onclick="switchTab(4)">5. Rapor</button>
   </div>
 
-  <!-- STEP 1 -->
-  <div class="panel-section active" id="sec-info">
-    <div class="section-eyebrow">Adım 1 · GRI 2 Genel Açıklamalar</div>
-    <h2 class="section-title">Kuruluş künyesini girin</h2>
-    <p class="section-lead">Bu bilgiler raporun <b>GRI 2: Genel Açıklamalar (2021)</b> bölümünü oluşturur — kuruluş kimliği, faaliyetler ve çalışan profili. Yıldızlı (*) alanlar zorunludur.</p>
+  <!-- TAB 1: ORGANİZASYON BİLGİLERİ (GRI 2-1 to 2-8) -->
+  <div class="tab-content active">
+    <div class="section-eyebrow">Adım 1</div>
+    <h2 class="section-title">Kuruluş Bilgileri <span class="badge-gri required">GRI 2 Gerekli</span></h2>
+    <p class="section-lead">Raporlama kapsamı ve kuruluşunuzun temel bilgilerini girin. GRI 2: General Disclosures 2021 uyarınca bu bilgiler raporun bağlamını sağlar.</p>
 
-    <div style="margin-bottom:26px;">
-      <label style="display:block; margin-bottom:12px;">Sektör bağlamı <span style="font-weight:400;color:var(--text-muted)">(GRI Sektör Standardı önerisi için)</span></label>
+    <div class="info-box">
+      <strong>ℹ️ GRI 2 Nedir?</strong> Kuruluşunuzun raporlama uygulamaları, faaliyetleri, yönetişimi, stratejisi ve paydaş katılımı hakkında bilgi içeren evrensel bir standarttır.
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Kuruluş Adı <span class="badge-gri required">2-1</span></label>
+        <input type="text" id="inp-title" placeholder="Örn: Tekstil Endüstrileri A.Ş.">
+        <div class="hint">Resmi kuruluş adını yazın</div>
+      </div>
+      <div class="form-group">
+        <label>Faaliyetler <span class="badge-gri required">2-6</span></label>
+        <input type="text" id="inp-activity" placeholder="Örn: Örme kumaş üretimi">
+        <div class="hint">Ana faaliyet alanınızı belirtiniz</div>
+      </div>
+      <div class="form-group">
+        <label>Merkez Lokasyon <span class="badge-gri required">2-1</span></label>
+        <input type="text" id="inp-location" placeholder="Örn: Bursa, Türkiye">
+      </div>
+      <div class="form-group">
+        <label>Çalışan Sayısı <span class="badge-gri required">2-7</span></label>
+        <input type="number" id="inp-employees" placeholder="0">
+        <div class="hint">Tam zamanlı eşdeğer sayısını girin</div>
+      </div>
+      <div class="form-group">
+        <label>Raporlama Yılı</label>
+        <input type="number" id="inp-year" placeholder="2025">
+      </div>
+      <div class="form-group">
+        <label>Üretim / Çıktı Hacmi</label>
+        <input type="number" id="inp-output" placeholder="5000">
+      </div>
+      <div class="form-group">
+        <label>Çıktı Birimi</label>
+        <input type="text" id="inp-outunit" placeholder="Örn: ton, birim, MWh">
+      </div>
+      <div class="form-group full">
+        <label>Kuruluş Özeti <span class="badge-gri required">2-6</span></label>
+        <textarea id="inp-summary" rows="4" placeholder="Kuruluşunuzun kısa açıklamasını ve önemli faaliyetlerini yazınız..."></textarea>
+      </div>
+    </div>
+
+    <div style="margin-top: 32px; padding: 20px; background: var(--soc-light); border-radius: 8px;">
+      <strong>Sektör Seçimi</strong>
+      <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Kuruluşunuzu tanımlamak için en uygun sektörü seçin (GRI Sector Standards)</p>
       <div class="sector-grid">
-        <button type="button" class="sector-btn" onclick="selectSector(this,'genel')">Sektör-bağımsız<small>Yalnızca Konu Standartları</small></button>
-        <button type="button" class="sector-btn" onclick="selectSector(this,'petrol')">Petrol &amp; Gaz<small>GRI 11</small></button>
-        <button type="button" class="sector-btn" onclick="selectSector(this,'komur')">Kömür<small>GRI 12</small></button>
-        <button type="button" class="sector-btn" onclick="selectSector(this,'tarim')">Tarım / Su ürünleri<small>GRI 13</small></button>
-        <button type="button" class="sector-btn" onclick="selectSector(this,'maden')">Madencilik<small>GRI 14</small></button>
+        <button class="sector-btn" onclick="selectSector(this, 'genel')">🏭 Genel Sanayi</button>
+        <button class="sector-btn" onclick="selectSector(this, 'tekstil')">👕 Tekstil</button>
+        <button class="sector-btn" onclick="selectSector(this, 'cevresel')">♻️ Çevresel Hizmetler</button>
+        <button class="sector-btn" onclick="selectSector(this, 'enerji')">⚡ Enerji</button>
+        <button class="sector-btn" onclick="selectSector(this, 'inşaat')">🏗️ İnşaat</button>
+        <button class="sector-btn" onclick="selectSector(this, 'teknoloji')">💻 Teknoloji</button>
+        <button class="sector-btn" onclick="selectSector(this, 'harita')">🗺️ Harita Servisleri</button>
+        <button class="sector-btn" onclick="selectSector(this, 'turizm')">🏨 Turizm</button>
+      </div>
+    </div>
+
+    <div class="btn-row" style="margin-top: 32px;">
+      <button class="btn btn-primary" onclick="nextTab(1)">Devam Et →</button>
+      <button class="btn" onclick="loadDemo()">Demo Verileri Yükle</button>
+    </div>
+  </div>
+
+  <!-- TAB 2: YÖNETİM & STRATEJİ (GRI 2-9 to 2-28) -->
+  <div class="tab-content">
+    <div class="section-eyebrow">Adım 2</div>
+    <h2 class="section-title">Yönetişim & Sürdürülebilirlik Stratejisi <span class="badge-gri required">GRI 2</span></h2>
+    <p class="section-lead">Kuruluşunuzun yönetim yapısı, stratejisi ve temel politikalarını açıklayın. Bu bilgiler GRI 2'nin kriter 4 ve 5. bölümlerini karşılar.</p>
+
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Yönetişim Yapısı <span class="badge-gri required">2-9, 2-12</span></label>
+        <textarea id="inp-governance" rows="4" placeholder="Yönetim Kurulu komiteleri, görev dağılımı ve karar alma mekanizmaları hakkında bilgi verin..."></textarea>
+        <div class="hint">En yüksek yönetim organının yapısını ve sorumluluklarını açıklayın</div>
+      </div>
+      
+      <div class="form-group full">
+        <label>Sürdürülebilirlik Stratejisi <span class="badge-gri required">2-22</span></label>
+        <textarea id="inp-strategy" rows="4" placeholder="Kuruluşunuzun sürdürülebilirlik hedefleri ve stratejik yöneliş..."></textarea>
+        <div class="hint">3-5 yıllık stratejik hedefleri yazınız</div>
+      </div>
+
+      <div class="form-group full">
+        <label>Ana Politikalar <span class="badge-gri required">2-23, 2-24</span></label>
+        <textarea id="inp-policies" rows="3" placeholder="İnsan hakları, çevresel yönetim, etik ve diğer temel politikalarınız..."></textarea>
+        <div class="hint">Yüksek seviye politika taahhütlerini listeleyin</div>
+      </div>
+
+      <div class="form-group full">
+        <label>Paydaş Katılım Süreci <span class="badge-gri required">2-29</span></label>
+        <textarea id="inp-stakeholder" rows="3" placeholder="Müşteriler, çalışanlar, tedarikçiler, toplum, hükümet ile ilişki yönetimi..."></textarea>
+        <div class="hint">Ana paydaş grupları ve katılım yöntemleri</div>
+      </div>
+
+      <div class="form-group full">
+        <label>Şikayetler & Uyum Mekanizması <span class="badge-gri required">2-26, 2-25</span></label>
+        <textarea id="inp-remediation" rows="3" placeholder="Şikayetleri almak, gidermek ve negatif etkiler üzerine alınan adımlar..."></textarea>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="nextTab(0)">← Geri</button>
+      <button class="btn btn-primary" onclick="nextTab(2)">Devam Et →</button>
+    </div>
+  </div>
+
+  <!-- TAB 3: MATERIAL TOPICS (GRI 3) -->
+  <div class="tab-content">
+    <div class="section-eyebrow">Adım 3</div>
+    <h2 class="section-title">Material Topics (Önemli Konular) <span class="badge-gri required">GRI 3</span></h2>
+    <p class="section-lead">GRI 3: Material Topics 2021 ile kuruluşunuzun en önemli sürdürülebilirlik konularını belirleyin. İlk olarak bütün konuların önemini değerlendirin.</p>
+
+    <div class="info-box">
+      <strong>💡 Material Topics Nedir?</strong> Kuruluşunuzun işletme ve stratejisine yönelik önemli ekonomik, çevresel ve sosyal etkilerini belirtir. Bütün GRI Standartları konularını değerlendirip en kritikleri seçin.
+    </div>
+
+    <div style="margin-bottom: 32px;">
+      <h4 style="margin-bottom: 16px; color: var(--primary); font-size: 16px;">Tüm GRI Konu Alanları Değerlendirmesi</h4>
+      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Her konunun kuruluşunuz için önemini 1-5 arasında değerlendirin (1=Önemsiz, 5=Kritik)</div>
+      
+      <div style="display: grid; gap: 16px;">
+        <!-- Ekonomik -->
+        <div>
+          <h5 style="font-size: 14px; font-weight: 700; color: var(--eco); margin-bottom: 12px;">📊 Ekonomik Konular (GRI 200)</h5>
+          <div style="display: grid; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Ekonomik Performans (201)</span>
+              <input type="range" min="1" max="5" value="3" class="gri-topic" data-code="201" style="width: 100px;">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Tedarik Zinciri / Satın Alma (204)</span>
+              <input type="range" min="1" max="5" value="3" class="gri-topic" data-code="204" style="width: 100px;">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Yolsuzlukla Mücadele (205)</span>
+              <input type="range" min="1" max="5" value="3" class="gri-topic" data-code="205" style="width: 100px;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Çevresel -->
+        <div>
+          <h5 style="font-size: 14px; font-weight: 700; color: var(--env); margin-bottom: 12px;">♻️ Çevresel Konular (GRI 300)</h5>
+          <div style="display: grid; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Malzeme Yönetimi (301)</span>
+              <input type="range" min="1" max="5" value="3" class="gri-topic" data-code="301" style="width: 100px;">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Enerji (302)</span>
+              <input type="range" min="1" max="5" value="4" class="gri-topic" data-code="302" style="width: 100px;">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Su ve Atık Su (303)</span>
+              <input type="range" min="1" max="5" value="4" class="gri-topic" data-code="303" style="width: 100px;">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Emisyonlar (305)</span>
+              <input type="range" min="1" max="5" value="4" class="gri-topic" data-code="305" style="width: 100px;">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Atık Yönetimi (306)</span>
+              <input type="range" min="1" max="5" value="3" class="gri-topic" data-code="306" style="width: 100px;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Sosyal -->
+        <div>
+          <h5 style="font-size: 14px; font-weight: 700; color: var(--soc); margin-bottom: 12px;">👥 Sosyal Konular (GRI 400)</h5>
+          <div style="display: grid; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>İstihdam (401)</span>
+              <input type="range" min="1" max="5" value="4" class="gri-topic" data-code="401" style="width: 100px;">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>İş Sağlığı & Güvenliği (403)</span>
+              <input type="range" min="1" max="5" value="4" class="gri-topic" data-code="403" style="width: 100px;">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Eğitim & Geliştirme (404)</span>
+              <input type="range" min="1" max="5" value="3" class="gri-topic" data-code="404" style="width: 100px;">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Çeşitlilik & Eşit Fırsat (405)</span>
+              <input type="range" min="1" max="5" value="3" class="gri-topic" data-code="405" style="width: 100px;">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px; border: 1px solid var(--border); border-radius: 6px;">
+              <span>Tedarikçi Sosyal Uyum (414)</span>
+              <input type="range" min="1" max="5" value="2" class="gri-topic" data-code="414" style="width: 100px;">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="form-grid">
       <div class="form-group full">
-        <label>Kuruluş / raporlayan adı *</label>
-        <input type="text" id="inp-title" placeholder="Örn: Örnek Sanayi A.Ş.">
-        <span class="hint">GRI 2-1 Kurumsal detaylar</span>
-      </div>
-      <div class="form-group">
-        <label>Faaliyet alanı *</label>
-        <input type="text" id="inp-activity" placeholder="Örn: Tekstil üretimi">
-        <span class="hint">GRI 2-6 Faaliyetler ve değer zinciri</span>
-      </div>
-      <div class="form-group">
-        <label>Merkez / konum</label>
-        <input type="text" id="inp-location" placeholder="Örn: Bursa, Türkiye">
-        <span class="hint">GRI 2-1</span>
-      </div>
-      <div class="form-group">
-        <label>Toplam çalışan sayısı *</label>
-        <input type="number" id="inp-employees" placeholder="Örn: 240" min="0">
-        <span class="hint">GRI 2-7 Çalışanlar</span>
-      </div>
-      <div class="form-group">
-        <label>Raporlama dönemi (yıl)</label>
-        <input type="number" id="inp-year" placeholder="Örn: 2025" min="2000" max="2100">
-        <span class="hint">GRI 2-3 Raporlama dönemi</span>
-      </div>
-      <div class="form-group">
-        <label>Yıllık üretim / çıktı (birim)</label>
-        <input type="number" id="inp-output" placeholder="Örn: 5000" min="0" step="any">
-        <span class="hint">Yoğunluk göstergeleri için payda (ör. ton)</span>
-      </div>
-      <div class="form-group">
-        <label>Üretim birimi etiketi</label>
-        <input type="text" id="inp-outunit" placeholder="Örn: ton ürün">
-        <span class="hint">305-4 / 302-3 / 303-5 yoğunluk hesabı</span>
-      </div>
-      <div class="form-group full">
-        <label>Kısa tanım</label>
-        <textarea id="inp-summary" placeholder="Kuruluşun faaliyetleri ve sürdürülebilirlik yaklaşımı hakkında birkaç cümle" style="height:78px;"></textarea>
+        <label>Seçilen Material Topics (GRI 3-2)</label>
+        <textarea id="material-topics-list" rows="3" placeholder="Önem puanı 4 veya 5 olan konular burada otomatik listelenir." readonly style="background: var(--light-bg); color: var(--text-dark); cursor: text;"></textarea>
+        <div class="hint">Puanı ≥ 4 olan konular otomatik olarak material topic (önemli konu) kabul edilir ve rapora aktarılır.</div>
       </div>
     </div>
 
-    <div class="btn-row" style="margin-top: 24px;">
-      <button type="button" class="btn btn-primary" onclick="goToStep(1)">Göstergelere geç</button>
-      <button type="button" class="btn btn-ghost" onclick="loadDemo()">Örnek verilerle doldur</button>
+    <div class="btn-row">
+      <button class="btn" onclick="nextTab(1)">← Geri</button>
+      <button class="btn btn-primary" onclick="nextTab(3)">Devam Et →</button>
     </div>
   </div>
 
-  <!-- STEP 2 -->
-  <div class="panel-section" id="sec-metrics">
-    <div class="section-eyebrow">Adım 2 · GRI 200 / 300 / 400 Konu Standartları</div>
-    <h2 class="section-title">GRI göstergelerini doldurun</h2>
-    <p class="section-lead">Elinizdeki verileri ilgili göstergeye girin. Her satır gerçek bir <b>GRI gösterge koduna</b> bağlıdır. Bilmediğiniz alanları boş bırakabilirsiniz — skor yalnızca girilen göstergeler üzerinden hesaplanır. Referans hedefleri sektör ortalamalarına göre düzenleyebilirsiniz.</p>
+  <!-- TAB 4: GRI GÖSTERGELER -->
+  <div class="tab-content">
+    <div class="section-eyebrow">Adım 4</div>
+    <h2 class="section-title">GRI Gösterge Sistemi</h2>
+    <p class="section-lead">Kuruluşunuzun performansını ölçmek için seçili material topics'e ait GRI göstergelerini girin.</p>
 
-    <div id="metrics-container"></div>
-
-    <div class="btn-row" style="margin-top:8px;">
-      <button type="button" class="btn" onclick="goToStep(0)">Geri</button>
-      <button type="button" class="btn btn-primary" onclick="goToStep(2)">Analiz et ve rapor oluştur</button>
-      <button type="button" class="btn btn-ghost" onclick="fillDemoMetrics()">Örnek değerlerle doldur</button>
-    </div>
-  </div>
-
-  <!-- STEP 3 -->
-  <div class="panel-section" id="sec-loading">
-    <div class="section-eyebrow">Adım 3</div>
-    <h2 class="section-title">Veriler GRI çerçevesiyle değerlendiriliyor</h2>
-    <p class="section-lead">Göstergeleriniz ilgili GRI standartlarıyla eşleştiriliyor ve rapor derleniyor…</p>
-    <div class="loading-card" style="margin-top:36px;"><div id="loading-steps"></div></div>
-  </div>
-
-  <!-- STEP 4a: RESULTS SUMMARY -->
-  <div class="panel-section" id="sec-results">
-    <div class="result-header">
-      <h2 class="result-title" id="res-title-main">Sürdürülebilirlik Değerlendirmesi</h2>
-      <div class="badges" id="res-badges"></div>
+    <div class="info-box">
+      <strong>📈 GRI Göstergeleri</strong> - Her material topic için spesifik veri noktaları. Tüm sayılar kesin tahmindir veya 2025 verilerine dayanır.
     </div>
 
-    <div class="score-hero">
-      <div class="gauge-wrap">
-        <div id="gauge-svg"></div>
-        <div class="gauge-caption">GRI Olgunluk Skoru</div>
-      </div>
-      <div class="hero-right">
-        <div class="hero-status" id="hero-status">—</div>
-        <div class="hero-headline" id="hero-headline">—</div>
-        <div class="hero-sub" id="hero-sub">—</div>
+    <div style="margin-bottom: 24px;">
+      <h4 style="font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 14px;">📊 Ekonomik Göstergeler (GRI 200)</h4>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Doğrudan Ekonomik Değer (201-1)</div>
+          <div class="metric-code">GRI-201-1</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">Gelir</span></div>
+            <div><input type="number" id="in-m201_1" class="metric-input" placeholder="0" data-gri="201-1"></div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Satın Alma Uygulamaları (204-1)</div>
+          <div class="metric-code">GRI-204-1</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">Yerel Satın Alma %</span></div>
+            <div><input type="number" id="in-m204_1" class="metric-input" placeholder="0" min="0" max="100" data-gri="204-1"></div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Yolsuzlukla Mücadele (205-2)</div>
+          <div class="metric-code">GRI-205-2</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">Eğitim Alan Çalışan %</span></div>
+            <div><input type="number" id="in-m205_2" class="metric-input" placeholder="0" min="0" max="100" data-gri="205-2"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="cat-score-grid" id="cat-scores"></div>
-
-    <div id="preview-content"></div>
-
-    <div class="report-section" style="margin-top:8px;">
-      <h4><span style="font-family:var(--mono);font-size:12px;background:var(--accent);color:#fff;width:24px;height:24px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;">↗</span>Sektör Kıyaslaması · Referans Raporlar</h4>
-      <div id="benchmark-content"></div>
-    </div>
-
-    <div class="btn-row no-print" style="margin: 30px 0; justify-content: center;">
-      <button type="button" class="btn btn-accent" onclick="goToStep(3)">Tam GRI raporunu göster</button>
-      <button type="button" class="btn" onclick="resetAll()">Yeni değerlendirme</button>
-    </div>
-  </div>
-
-  <!-- STEP 4b: FULL REPORT -->
-  <div class="panel-section" id="sec-full">
-    <div class="result-header">
-      <h2 class="result-title">GRI Sürdürülebilirlik Raporu</h2>
-      <div class="btn-row no-print" style="margin-top: 12px;">
-        <button type="button" class="btn btn-primary" onclick="window.print()">Yazdır / PDF</button>
-        <button type="button" class="btn" onclick="downloadHTML()">HTML indir</button>
-        <button type="button" class="btn" onclick="downloadJSON()">Veri (JSON)</button>
+    <div style="margin-bottom: 24px;">
+      <h4 style="font-size: 15px; font-weight: 700; color: var(--env); margin-bottom: 14px;">♻️ Çevresel Göstergeler (GRI 300)</h4>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Enerji Tüketimi (302-1)</div>
+          <div class="metric-code">GRI-302-1</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">MWh</span></div>
+            <div><input type="number" id="in-m302_1" class="metric-input" placeholder="0" data-gri="302-1"></div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Su Kullanımı (303-5)</div>
+          <div class="metric-code">GRI-303-5</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">1000 m³</span></div>
+            <div><input type="number" id="in-m303_5" class="metric-input" placeholder="0" data-gri="303-5"></div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Doğrudan Emisyonlar (305-1)</div>
+          <div class="metric-code">GRI-305-1</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">ton CO₂e</span></div>
+            <div><input type="number" id="in-m305_1" class="metric-input" placeholder="0" data-gri="305-1"></div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Atık (306-5)</div>
+          <div class="metric-code">GRI-306-5</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">ton</span></div>
+            <div><input type="number" id="in-m306_5" class="metric-input" placeholder="0" data-gri="306-5"></div>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="full-report-content" class="report-doc"></div>
-    <div class="btn-row no-print" style="margin-top: 24px; justify-content: center;">
-      <button type="button" class="btn" onclick="goToStep(2.5)">Özete dön</button>
-      <button type="button" class="btn btn-ghost" onclick="resetAll()">Baştan başla</button>
+
+    <div style="margin-bottom: 24px;">
+      <h4 style="font-size: 15px; font-weight: 700; color: var(--soc); margin-bottom: 14px;">👥 Sosyal Göstergeler (GRI 400)</h4>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Çalışan Devir Hızı (401-1)</div>
+          <div class="metric-code">GRI-401-1</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">%</span></div>
+            <div><input type="number" id="in-m401_1" class="metric-input" placeholder="0" min="0" max="100" data-gri="401-1"></div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">İş Kazası Oranı (403-9)</div>
+          <div class="metric-code">GRI-403-9</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">Oran</span></div>
+            <div><input type="number" id="in-m403_9" class="metric-input" placeholder="0" step="0.1" data-gri="403-9"></div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Eğitim Saati (404-1)</div>
+          <div class="metric-code">GRI-404-1</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">Saat/Kişi</span></div>
+            <div><input type="number" id="in-m404_1" class="metric-input" placeholder="0" data-gri="404-1"></div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Kadın Çalışan (405-1)</div>
+          <div class="metric-code">GRI-405-1</div>
+          <div class="metric-row">
+            <div><span style="font-size: 12px; color: var(--text-muted);">%</span></div>
+            <div><input type="number" id="in-m405_1" class="metric-input" placeholder="0" min="0" max="100" data-gri="405-1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="nextTab(2)">← Geri</button>
+      <button class="btn btn-primary" onclick="generateReport()">Rapor Oluştur →</button>
     </div>
   </div>
+
+  <!-- TAB 5: RAPOR -->
+  <div class="tab-content">
+    <div class="section-eyebrow">Adım 5</div>
+    <h2 class="section-title">GRI Sürdürülebilirlik Raporu</h2>
+    
+    <div class="btn-row">
+      <button class="btn btn-accent" onclick="downloadJSON()">📥 JSON İndir</button>
+      <button class="btn btn-accent" onclick="downloadHTML()">📄 HTML İndir</button>
+      <button class="btn btn-accent" onclick="downloadPDF()">📑 PDF İndir</button>
+      <button class="btn" onclick="resetAll()">Sıfırla</button>
+    </div>
+
+    <div id="full-report-content" style="margin-top: 24px; line-height: 1.8;">
+      <div class="info-box" style="margin:0;">
+        <strong>Henüz rapor oluşturulmadı.</strong> 4. adımdaki <em>“Rapor Oluştur”</em> düğmesine basarak
+        girdiğiniz verilerden GRI raporunu üretebilirsiniz.
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-/* ============ GRI GÖSTERGE TANIMLARI ============
-   dir: 'up' (yüksek iyi) | 'down' (düşük iyi) | 'ratio' (1'e yakın iyi) | 'info' (skorsuz)
-   target: referans/hedef değer   intensity:true → üretim birimine bölünür  */
-const CATS = {
-  eco: { key:'eco', code:'GRI 200', name:'Ekonomik', cls:'cat-eco' },
-  env: { key:'env', code:'GRI 300', name:'Çevresel', cls:'cat-env' },
-  soc: { key:'soc', code:'GRI 400', name:'Sosyal',   cls:'cat-soc' }
-};
+let selectedSector = 'genel';
+let org = {};
+let analysis = {};
+let currentTab = 0;
 
+// Neks Çevre Teknolojileri marka bilgileri
+const BRAND_NAME = 'Neks Çevre Teknolojileri';
+const REPORT_AUTHOR = 'Prof. Dr. Nezih Kamil Salihoğlu';
+const NEKS_LOGO = "data:image/png;base64,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";
+
+const REPORT_PLACEHOLDER = `
+  <div class="info-box" style="margin:0;">
+    <strong>Henüz rapor oluşturulmadı.</strong> 4. adımdaki <em>“Rapor Oluştur”</em> düğmesine basarak
+    girdiğiniz verilerden GRI raporunu üretebilirsiniz.
+  </div>`;
+
+// dir: puanlama yönü
+//  'up'      -> yüksek daha iyi (good=100 puan eşiği, bad=0 puan eşiği)
+//  'down'    -> düşük daha iyi
+//  'target'  -> hedefe yakınlık (target değeri en iyi, tol=tolerans)
+//  'volume'  -> mutlak hacim; hedef olmadan performans puanı anlamsızdır,
+//               yalnızca veri kapsamına sayılır (yoğunluk gösterilir)
 const METRICS = [
-  // --- EKONOMİK (GRI 200) ---
-  { id:'m201_1', cat:'eco', code:'GRI 201-1', name:'Üretilen ve dağıtılan doğrudan ekonomik değer', unit:'mn TL', dir:'info',  target:null, hint:'Ekonomik Performans' },
-  { id:'m204_1', cat:'eco', code:'GRI 204-1', name:'Yerel tedarikçilere yapılan harcama oranı',      unit:'%',    dir:'up',    target:60,  hint:'Satın Alma Uygulamaları' },
-  { id:'m205_2', cat:'eco', code:'GRI 205-2', name:'Yolsuzlukla mücadele eğitimi alan çalışan oranı', unit:'%',    dir:'up',    target:100, hint:'Yolsuzlukla Mücadele' },
-  { id:'m205_3', cat:'eco', code:'GRI 205-3', name:'Doğrulanmış yolsuzluk vakası sayısı',             unit:'adet', dir:'down',  target:0,   hint:'Yolsuzlukla Mücadele' },
-  { id:'m207_1', cat:'eco', code:'GRI 207-4', name:'Ülke bazlı vergi şeffaflığı raporlaması',         unit:'0/1',  dir:'up',    target:1,   hint:'Vergi · 1=uygulanıyor, 0=hayır' },
-
-  // --- ÇEVRESEL (GRI 300) ---
-  { id:'m301_2', cat:'env', code:'GRI 301-2', name:'Geri dönüştürülmüş girdi malzemesi oranı',        unit:'%',    dir:'up',    target:30,  hint:'Malzemeler' },
-  { id:'m302_1', cat:'env', code:'GRI 302-1', name:'Kurum içi toplam enerji tüketimi',                unit:'GJ',   dir:'info',  target:null, hint:'Enerji' },
-  { id:'m302_3', cat:'env', code:'GRI 302-3', name:'Enerji yoğunluğu (birim üretime düşen enerji)',   unit:'GJ/br',dir:'down',  target:8,   hint:'Enerji · düşük daha iyi' },
-  { id:'m303_5', cat:'env', code:'GRI 303-5', name:'Su tüketimi yoğunluğu',                            unit:'m³/br',dir:'down',  target:5,   hint:'Su ve Atıksular · düşük daha iyi' },
-  { id:'m305_1', cat:'env', code:'GRI 305-1', name:'Kapsam 1 (doğrudan) SG emisyonları',              unit:'tCO₂e',dir:'info',  target:null, hint:'Emisyonlar' },
-  { id:'m305_2', cat:'env', code:'GRI 305-2', name:'Kapsam 2 (dolaylı) SG emisyonları',               unit:'tCO₂e',dir:'info',  target:null, hint:'Emisyonlar' },
-  { id:'m305_4', cat:'env', code:'GRI 305-4', name:'SG emisyon yoğunluğu',                             unit:'kgCO₂e/br',dir:'down',target:150,hint:'Emisyonlar · düşük daha iyi' },
-  { id:'m305_5', cat:'env', code:'GRI 305-5', name:'Önceki yıla göre SG emisyon azaltımı',            unit:'%',    dir:'up',    target:5,   hint:'Emisyonlar' },
-  { id:'m306_4', cat:'env', code:'GRI 306-4', name:'Bertaraftan uzaklaştırılan (geri kazanılan) atık oranı', unit:'%', dir:'up', target:70, hint:'Atık' },
-
-  // --- SOSYAL (GRI 400) ---
-  { id:'m401_1', cat:'soc', code:'GRI 401-1', name:'Yıllık çalışan devir oranı',                      unit:'%',    dir:'down',  target:15,  hint:'İstihdam · düşük daha iyi' },
-  { id:'m403_9', cat:'soc', code:'GRI 403-9', name:'İş kazası sıklık oranı (kaydedilebilir yaralanma)', unit:'/mn s', dir:'down', target:0, hint:'İş Sağlığı ve Güvenliği' },
-  { id:'m404_1', cat:'soc', code:'GRI 404-1', name:'Çalışan başına yıllık ortalama eğitim saati',     unit:'saat', dir:'up',    target:20,  hint:'Eğitim ve Öğretim' },
-  { id:'m405_1', cat:'soc', code:'GRI 405-1', name:'Yönetim kademesinde kadın çalışan oranı',         unit:'%',    dir:'up',    target:40,  hint:'Çeşitlilik ve Fırsat Eşitliği' },
-  { id:'m405_2', cat:'soc', code:'GRI 405-2', name:'Kadın/erkek temel ücret oranı (1,0 = eşit)',      unit:'oran', dir:'ratio', target:1,   hint:'Çeşitlilik · 1,0 ideal' }
+  { id: 'm201_1', code: '201-1', name: 'Doğrudan Ekonomik Değer', category: 'ekonomik', unit: 'Milyon ₺', dir: 'volume' },
+  { id: 'm204_1', code: '204-1', name: 'Yerel Satın Alma Oranı',   category: 'ekonomik', unit: '%',        dir: 'up',   good: 75, bad: 25 },
+  { id: 'm205_2', code: '205-2', name: 'Yolsuzlukla Mücadele Eğitimi', category: 'ekonomik', unit: '%',    dir: 'up',   good: 90, bad: 40 },
+  { id: 'm302_1', code: '302-1', name: 'Enerji Tüketimi',          category: 'cevresel', unit: 'MWh',       dir: 'volume' },
+  { id: 'm303_5', code: '303-5', name: 'Su Kullanımı',             category: 'cevresel', unit: '1000 m³',   dir: 'volume' },
+  { id: 'm305_1', code: '305-1', name: 'Doğrudan Emisyonlar',      category: 'cevresel', unit: 'ton CO₂e',  dir: 'volume' },
+  { id: 'm306_5', code: '306-5', name: 'Atık',                     category: 'cevresel', unit: 'ton',       dir: 'volume' },
+  { id: 'm401_1', code: '401-1', name: 'Çalışan Devir Hızı',       category: 'sosyal',   unit: '%',         dir: 'down', good: 10, bad: 30 },
+  { id: 'm403_9', code: '403-9', name: 'İş Kazası Oranı',          category: 'sosyal',   unit: 'Oran',      dir: 'down', good: 1,  bad: 5 },
+  { id: 'm404_1', code: '404-1', name: 'Eğitim Saati / Kişi',      category: 'sosyal',   unit: 'Saat',      dir: 'up',   good: 40, bad: 5 },
+  { id: 'm405_1', code: '405-1', name: 'Kadın Çalışan Oranı',      category: 'sosyal',   unit: '%',         dir: 'target', target: 50, tol: 25 },
 ];
 
-/* Öneri eşleştirmeleri (zayıf gösterge → GRI atıflı eylem) */
-const RECS = {
-  m204_1:'Yerel ve KOBİ tedarikçilere yönelik satın alma politikası oluşturun; yerel harcama oranını izleyin.',
-  m205_2:'Tüm çalışanları kapsayan düzenli yolsuzlukla mücadele eğitimi programı kurun.',
-  m205_3:'Etik ihbar hattı ve bağımsız denetim mekanizmalarını güçlendirin.',
-  m207_1:'Vergi stratejinizi ve ülke bazlı vergi bilgilerini kamuya açık şekilde raporlayın.',
-  m301_2:'Üretimde geri dönüştürülmüş/ikincil hammadde kullanımını artıracak tedarik hedefleri belirleyin.',
-  m302_3:'Enerji verimliliği etütleri yaptırın; ISO 50001 enerji yönetim sistemini değerlendirin.',
-  m303_5:'Su geri kazanım/kapalı devre sistemleri kurun; birim başına su tüketim hedefi koyun.',
-  m305_4:'Yenilenebilir enerji tedariki ve düşük karbonlu üretim yatırımlarıyla emisyon yoğunluğunu düşürün.',
-  m305_5:'Bilime dayalı (SBTi uyumlu) yıllık emisyon azaltım hedefi tanımlayın.',
-  m306_4:'Kaynağında ayrıştırma ve geri kazanım programlarını genişleterek atık yönlendirme oranını artırın.',
-  m401_1:'Çalışan bağlılığı, kariyer ve ücret politikalarını gözden geçirerek devir oranını düşürün.',
-  m403_9:'ISO 45001 çerçevesinde tehlike tanımlama ve kök-neden analizini güçlendirin; kaza-sıfır hedefi koyun.',
-  m404_1:'Çalışan başına eğitim saatini artıracak yıllık gelişim ve beceri programları planlayın.',
-  m405_1:'Yönetimde cinsiyet dengesini iyileştiren atama ve yedekleme (succession) hedefleri belirleyin.',
-  m405_2:'Ücret eşitliği analizi yaparak kadın/erkek temel ücret farkını kapatın.'
-};
+// Bir gösterge değerini 0-100 arası puana çevirir.
+// Performans puanı hesaplanamıyorsa (volume / veri yok) null döner.
+function scoreMetric(m, val) {
+  if (val === null || isNaN(val)) return null;
+  const clamp = x => Math.max(0, Math.min(100, Math.round(x)));
+  switch (m.dir) {
+    case 'up':
+      return clamp((val - m.bad) / (m.good - m.bad) * 100);
+    case 'down':
+      return clamp((m.bad - val) / (m.bad - m.good) * 100);
+    case 'target':
+      return clamp(100 - Math.abs(val - m.target) / m.tol * 100);
+    default: // volume
+      return null;
+  }
+}
+
+// Puan rengini döndürür
+function scoreColor(s) {
+  if (s === null) return 'var(--text-muted)';
+  return s >= 70 ? 'var(--ok)' : s >= 40 ? 'var(--warn)' : 'var(--bad)';
+}
+
+// Puanı gösterime çevirir (hesaplanamıyorsa "—")
+function fmtScore(s) {
+  return (s === null || s === undefined || isNaN(s)) ? '—' : s;
+}
 
 const SECTORS = {
-  genel: { name:'Sektör-bağımsız', gri:null,     note:'Yalnızca GRI Konu Standartları (200/300/400) uygulanmıştır.' },
-  petrol:{ name:'Petrol ve Gaz',   gri:'GRI 11', note:'GRI 11: Petrol ve Gaz Sektörü (2021) — Kapsam 1-2-3 emisyonları, metan ve iklim geçişi öncelikli konulardır.' },
-  komur: { name:'Kömür',           gri:'GRI 12', note:'GRI 12: Kömür Sektörü (2022) — kapanış planları, emisyonlar ve adil geçiş vurgulanır.' },
-  tarim: { name:'Tarım / Su ürünleri', gri:'GRI 13', note:'GRI 13: Tarım, Su Ürünleri ve Balıkçılık (2022) — su, biyoçeşitlilik ve gıda güvencesi öne çıkar.' },
-  maden: { name:'Madencilik',      gri:'GRI 14', note:'GRI 14: Madencilik Sektörü (2024) — atık/pasa yönetimi, su ve topluluk hakları önceliklidir.' }
+  genel: { name: 'Genel Sanayi', color: '#6b7280' },
+  tekstil: { name: 'Tekstil & Moda', color: '#e74c3c' },
+  cevresel: { name: 'Çevresel Hizmetler', color: '#0a7c6e' },
+  enerji: { name: 'Enerji', color: '#f39c12' },
+  inşaat: { name: 'İnşaat & Gayrimenkul', color: '#9b59b6' },
+  teknoloji: { name: 'Teknoloji & İletişim', color: '#3498db' },
+  harita: { name: 'Harita Servisleri', color: '#16a085' },
+  turizm: { name: 'Turizm', color: '#e67e22' },
 };
 
-/* ============ REFERANS RAPORLAR (kamuya açık, yayımlanmış) ============
-   Çok sektörlü karma set. url'ler doğrulanmış kamuya açık kaynaklardır. */
-const BENCHMARKS = [
-  { sector:'Tekstil', company:'Kıvanç Tekstil San. ve Tic. A.Ş.', year:2024, std:'TSRS / GRI', source:'KGK portalı',
-    url:'https://www.kgk.gov.tr/Portalv2Uploads/files/Duyurular/v2/Surdurulebilirlik/Raporlar/K%C4%B1van%C3%A7%20Tekstil%20San_%20ve%20Tic_%20A_%C5%9E%202024%20TSRS%20Uyumlu%20S%C3%BCrd%C3%BCr%C3%BClebilirlik%20Raporu.pdf',
-    keys:['tekstil','kumaş','iplik','giyim','örme','dokuma','konfeksiyon','boya'] },
-  { sector:'Demir-Çelik / Metal', company:'Ereğli Demir Çelik (Erdemir)', year:2024, std:'Entegre / GRI', source:'KGK portalı',
-    url:'https://www.kgk.gov.tr/Portalv2Uploads/files/Duyurular/v2/Surdurulebilirlik/Raporlar/ERDEMIR2024EntegreFaaliyetRaporu.pdf',
-    keys:['çelik','demir','metal','döküm','alüminyum','sac','haddehane','maden'] },
-  { sector:'Bankacılık / Finans', company:'Akbank T.A.Ş.', year:2024, std:'TSRS / GRI', source:'KGK portalı',
-    url:'https://kgk.gov.tr/Portalv2Uploads/files/Duyurular/v2/Surdurulebilirlik/Raporlar/AKBANK_2024_TSRS_Uyumlu_Surdurulebilirlik_Raporu.pdf',
-    keys:['banka','finans','sigorta','kredi','yatırım','leasing'] },
-  { sector:'İnşaat / Taahhüt / Holding', company:'Tekfen Holding A.Ş.', year:2024, std:'Entegre / GRI', source:'Şirket sitesi',
-    url:'https://www.tekfen.com.tr/surdurulebilirlik-raporlari-3-5',
-    keys:['inşaat','taahhüt','holding','mühendislik','gübre','kimya','yapı'] }
-];
-const BENCHMARK_DIRS = [
-  { name:'KGK Sürdürülebilirlik Raporları Portalı', url:'https://www.kgk.gov.tr' },
-  { name:'Türkiye Sürdürülebilirlik Raporları veritabanı', url:'https://www.surdurulebilirlikraporu.org.tr/' }
-];
-
-let currentStep = 0, selectedSector = 'genel', org = {}, analysis = {};
-
-/* ---------- UI iskeleti ---------- */
-function selectSector(btn, s){ document.querySelectorAll('.sector-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); selectedSector=s; }
-
-function setStep(n){
-  const shown = Math.min(Math.floor(n),3);
-  for(let i=0;i<4;i++){
-    const dot=document.getElementById('dot-'+i), lbl=document.getElementById('lbl-'+i);
-    if(i<shown){ dot.className='step-num done'; lbl.className='step-label'; }
-    else if(i===shown){ dot.className='step-num active'; lbl.className='step-label active'; }
-    else { dot.className='step-num'; lbl.className='step-label'; }
-  }
-}
-function showSection(id){ document.querySelectorAll('.panel-section').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-
-function goToStep(step){
-  if(step===1){
-    const title=document.getElementById('inp-title').value.trim();
-    if(!title){ alert('Lütfen kuruluş adını girin.'); return; }
-    org = {
-      title, sector:selectedSector,
-      activity: document.getElementById('inp-activity').value.trim() || '—',
-      location: document.getElementById('inp-location').value.trim() || '—',
-      employees: parseFloat(document.getElementById('inp-employees').value)||0,
-      year: document.getElementById('inp-year').value.trim() || new Date().getFullYear(),
-      output: parseFloat(document.getElementById('inp-output').value)||0,
-      outunit: document.getElementById('inp-outunit').value.trim() || 'birim',
-      summary: document.getElementById('inp-summary').value.trim()
-    };
-    renderMetrics(); setStep(1); showSection('sec-metrics'); scrollTop();
-  } else if(step===2){
-    collectMetrics(); setStep(2); showSection('sec-loading'); runAnalysis();
-  } else if(step===2.5){
-    setStep(2); showSection('sec-results'); scrollTop();
-  } else if(step===3){
-    setStep(3); showSection('sec-full'); renderFullReport(); scrollTop();
-  } else if(step===0){
-    setStep(0); showSection('sec-info'); scrollTop();
-  }
-}
-function scrollTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
-
-function renderMetrics(){
-  const c=document.getElementById('metrics-container');
-  let html='';
-  Object.values(CATS).forEach(cat=>{
-    const items=METRICS.filter(m=>m.cat===cat.key);
-    html += `<div class="cat-group ${cat.cls}">
-      <div class="cat-head"><span class="cat-pill">${cat.code}</span><h3>${cat.name} göstergeleri</h3><span class="cat-sub">${items.length} gösterge</span></div>`;
-    items.forEach(m=>{
-      const dirTxt = m.dir==='up'?'↑ yüksek daha iyi':m.dir==='down'?'↓ düşük daha iyi':m.dir==='ratio'?'≈ 1,0 ideal':'ℹ bilgi amaçlı';
-      const tgt = m.target!==null ? ` · Hedef: <b>${m.target}${m.unit==='%'?'%':''}</b>` : '';
-      html += `<div class="metric-row">
-        <div class="metric-info">
-          <div class="metric-name"><span class="code-tag">${m.code}</span>${m.name}</div>
-          <div class="metric-meta"><span class="dir">${dirTxt}</span>${tgt} · <span style="opacity:.8">${m.hint}</span></div>
-        </div>
-        <div class="metric-input-wrap ${m.dir==='info'?'info':''}">
-          <input type="number" step="any" id="in-${m.id}" placeholder="—">
-          <span class="metric-unit">${m.unit}</span>
-        </div>
-      </div>`;
-    });
-    html+='</div>';
+function switchTab(idx) {
+  currentTab = idx;
+  document.querySelectorAll('.tab-content').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
   });
-  c.innerHTML=html;
-}
-
-function collectMetrics(){
-  org.values={};
-  METRICS.forEach(m=>{
-    const raw=document.getElementById('in-'+m.id).value;
-    org.values[m.id] = raw==='' ? null : parseFloat(raw);
+  document.querySelectorAll('.tab-btn').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
   });
 }
 
-/* ---------- Skorlama ---------- */
-function scoreMetric(m,v){
-  if(v===null||isNaN(v)) return null;
-  if(m.dir==='info') return null;
-  if(m.dir==='up'){
-    if(!m.target) return null;
-    return clamp(Math.round((v/m.target)*100),0,100);
-  }
-  if(m.dir==='down'){
-    if(m.target===0) return v<=0?100:clamp(Math.round(100 - v*20),0,100);
-    return v<=m.target?100:clamp(Math.round((m.target/v)*100),0,100);
-  }
-  if(m.dir==='ratio'){
-    return clamp(Math.round(100 - Math.abs(v-m.target)*200),0,100);
-  }
-  return null;
+function nextTab(idx) {
+  switchTab(idx);
+  window.scrollTo({top: document.querySelector('.tab-nav').offsetTop - 80, behavior: 'smooth'});
 }
-function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 
-async function runAnalysis(){
-  const steps=[
-    'Kuruluş künyesi işleniyor (GRI 2)…',
-    'Ekonomik göstergeler eşleştiriliyor (GRI 200)…',
-    'Çevresel göstergeler eşleştiriliyor (GRI 300)…',
-    'Sosyal göstergeler eşleştiriliyor (GRI 400)…',
-    'Kategori skorları hesaplanıyor…',
-    'Öncelikli konular ve öneriler derleniyor…',
-    'GRI raporu oluşturuluyor…'
+function selectSector(btn, sector) {
+  document.querySelectorAll('.sector-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedSector = sector;
+}
+
+function loadDemo() {
+  document.getElementById('inp-title').value = 'Örnek Tekstil Endüstrileri A.Ş.';
+  document.getElementById('inp-activity').value = 'Örme kumaş üretimi';
+  document.getElementById('inp-location').value = 'Bursa, Türkiye';
+  document.getElementById('inp-employees').value = 240;
+  document.getElementById('inp-year').value = 2025;
+  document.getElementById('inp-output').value = 5000;
+  document.getElementById('inp-outunit').value = 'ton kumaş';
+  document.getElementById('inp-summary').value = 'Orta ölçekli bir tekstil üreticisi olarak enerji verimliliği, su geri kazanımı ve çalışan refahına odaklanıyoruz.';
+  document.getElementById('inp-governance').value = 'Yönetim Kurulu (5 üye) + Audit Komitesi + Sürdürülebilirlik Komitesi. Her komite aylık toplantı yapar.';
+  document.getElementById('inp-strategy').value = '2030 yılına kadar: Enerji tasarrufu %40, Su kullanımı %30 azaltma, Cinsiyete dayalı fırsat eşitliği %50 kadın yönetici oranı.';
+  document.getElementById('inp-policies').value = 'İnsan Hakları, Çevre Yönetimi, Ahlak Kuralları, Tedarikçi Yönetim Sistemi.';
+  document.getElementById('inp-stakeholder').value = 'Çalışanlar (aylık toplantılar), Müşteriler (yıllık anket), Tedarikçiler (yıllık incelemeler), Toplum (mahalli danışma).';
+  document.getElementById('inp-remediation').value = 'Hattı Aç Sistemi, Çalışan Şikayetleri Periyodu, Bölgesel Toplantılar.';
+  
+  document.getElementById('in-m201_1').value = 820;
+  document.getElementById('in-m204_1').value = 52;
+  document.getElementById('in-m205_2').value = 70;
+  document.getElementById('in-m302_1').value = 41000;
+  document.getElementById('in-m303_5').value = 6.2;
+  document.getElementById('in-m305_1').value = 3100;
+  document.getElementById('in-m306_5').value = 64;
+  document.getElementById('in-m401_1').value = 19;
+  document.getElementById('in-m403_9').value = 1.4;
+  document.getElementById('in-m404_1').value = 14;
+  document.getElementById('in-m405_1').value = 28;
+  
+  const tekstilBtn = document.querySelector('[onclick="selectSector(this, \'tekstil\')"]');
+  if (tekstilBtn) tekstilBtn.classList.add('selected');
+  selectedSector = 'tekstil';
+  
+  alert('Demo veriler yüklendi! Artık rapor oluşturmaya hazırsınız.');
+}
+
+function generateReport() {
+  const titleVal = document.getElementById('inp-title').value.trim();
+  if (!titleVal) {
+    alert('Lütfen önce 1. adımda kuruluş adını girin.');
+    switchTab(0);
+    document.getElementById('inp-title').focus();
+    return;
+  }
+  org = {
+    title: titleVal,
+    activity: document.getElementById('inp-activity').value,
+    location: document.getElementById('inp-location').value,
+    employees: parseInt(document.getElementById('inp-employees').value) || 0,
+    year: parseInt(document.getElementById('inp-year').value) || new Date().getFullYear(),
+    output: document.getElementById('inp-output').value,
+    outunit: document.getElementById('inp-outunit').value,
+    summary: document.getElementById('inp-summary').value,
+    governance: document.getElementById('inp-governance').value,
+    strategy: document.getElementById('inp-strategy').value,
+    policies: document.getElementById('inp-policies').value,
+    stakeholder: document.getElementById('inp-stakeholder').value,
+    remediation: document.getElementById('inp-remediation').value,
+  };
+
+  const rows = METRICS.map(m => {
+    const el = document.getElementById('in-' + m.id);
+    const raw = el ? el.value.trim() : '';
+    const val = raw === '' ? null : parseFloat(raw);
+    const value = (val === null || isNaN(val)) ? null : val;
+    return { ...m, value, score: scoreMetric(m, value) };
+  });
+
+  // Kategori performans puanı: yalnızca puanlanabilir (score !== null) göstergelerin ortalaması
+  const avgScore = arr => {
+    const scored = arr.filter(r => r.score !== null);
+    if (scored.length === 0) return null; // puanlanabilir gösterge yok
+    return Math.round(scored.reduce((a, b) => a + b.score, 0) / scored.length);
+  };
+  // Kategori veri kapsamı yüzdesi
+  const coveragePct = arr => {
+    if (arr.length === 0) return 0;
+    return Math.round(arr.filter(r => r.value !== null).length / arr.length * 100);
+  };
+
+  const eco = rows.filter(r => r.category === 'ekonomik');
+  const env = rows.filter(r => r.category === 'cevresel');
+  const soc = rows.filter(r => r.category === 'sosyal');
+  const reported = rows.filter(r => r.value !== null).length;
+
+  analysis = {
+    rows,
+    overall: avgScore(rows),
+    eco: avgScore(eco),
+    env: avgScore(env),
+    soc: avgScore(soc),
+    ecoCov: coveragePct(eco),
+    envCov: coveragePct(env),
+    socCov: coveragePct(soc),
+    coverage: reported,
+    status: {
+      label: reported >= 8 ? 'Tanı Aşaması' : reported >= 4 ? 'Gelişim' : 'Başlangıç',
+      color: reported >= 8 ? 'var(--ok)' : reported >= 4 ? 'var(--warn)' : '#f39c12'
+    }
+  };
+
+  const dateStr = new Date().toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' });
+  
+  // Her gösterge için kıyas/hedef metni
+  const benchmarkText = m => {
+    switch (m.dir) {
+      case 'up':     return `≥ ${m.good} ${m.unit}`;
+      case 'down':   return `≤ ${m.good} ${m.unit}`;
+      case 'target': return `~ ${m.target} ${m.unit}`;
+      default:       return 'Hedef gerekli';
+    }
+  };
+  const scoreCell = r => {
+    if (r.value === null) return '<span style="color:var(--text-muted)">Veri yok</span>';
+    if (r.score === null) return '<span style="color:var(--eco);font-weight:600">Raporlandı</span>';
+    return `<span style="color:${scoreColor(r.score)};font-weight:700">${r.score}</span>`;
+  };
+  const tableRows = rows.map(r => `
+    <tr>
+      <td><strong>${r.code}</strong></td>
+      <td>${r.name}</td>
+      <td class="num">${r.value !== null ? `${r.value} ${r.unit}` : '—'}</td>
+      <td class="num">${benchmarkText(r)}</td>
+      <td>${scoreCell(r)}</td>
+    </tr>
+  `).join('');
+
+  const sizeLabel = org.employees >= 250 ? 'büyük ölçekli'
+                  : org.employees >= 50  ? 'orta ölçekli'
+                  : org.employees > 0    ? 'küçük ölçekli'
+                  : 'çalışan sayısı belirtilmemiş';
+  const findings = [
+    org.employees > 0
+      ? `${org.employees} çalışanla ${sizeLabel} bir kuruluş (GRI 2-7)`
+      : `Çalışan sayısı belirtilmemiştir; GRI 2-7 için bu bilgi gereklidir`,
+    selectedSector !== 'genel'
+      ? `${SECTORS[selectedSector]?.name || 'Tanımsız'} sektöründe faaliyet göstermektedir`
+      : 'Genel sanayi sektöründe faaliyet göstermektedir',
+    org.location
+      ? `Raporlama kapsamı ${org.location} lokasyonunu içermektedir (GRI 2-2)`
+      : 'Raporlama kapsamındaki lokasyon belirtilmemiştir (GRI 2-2)',
+    analysis.coverage >= 10 ? 'Göstergelerin çoğu için veri toplanmış ve sistemleştirilmiştir'
+      : analysis.coverage >= 5 ? 'Göstergelerin bir kısmı için veri toplanmıştır'
+      : 'Veri toplama süreci ilk aşamadadır',
   ];
-  const cont=document.getElementById('loading-steps'); cont.innerHTML='';
-  for(let i=0;i<steps.length;i++){
-    await new Promise(r=>setTimeout(r,460));
-    const d=document.createElement('div'); d.className='loading-step';
-    d.innerHTML='<div class="step-icon">✓</div><span>'+steps[i]+'</span>';
-    cont.appendChild(d); setTimeout(()=>d.classList.add('show'),10);
+  // Üretim hacmi girildiyse çevresel yoğunluk bulgusu ekle
+  const outNum = parseFloat(org.output);
+  const energyRow = rows.find(r => r.code === '302-1');
+  if (!isNaN(outNum) && outNum > 0 && energyRow && energyRow.value !== null) {
+    const intensity = (energyRow.value / outNum).toFixed(2);
+    findings.push(`Enerji yoğunluğu ≈ ${intensity} MWh / ${org.outunit || 'birim'} (302-1)`);
   }
 
-  // Gösterge skorları
-  const rows=METRICS.map(m=>{
-    const v=org.values[m.id];
-    return { ...m, value:v, score:scoreMetric(m,v), filled:(v!==null&&!isNaN(v)) };
+  const recommendations = [
+    { ref: '[GRI 3-1]', text: 'Material topics belirleme süreci (4 adım) tamamlanmalıdır: Konteksti anlama, Etkiyi tanımlama, Önemin değerlendirilmesi, Önceliklendirme.' },
+    { ref: '[GRI 2-23, 24]', text: 'Ana politikalar yazılı hale getirilmeli ve tüm şirket çapında iletilmelidir.' },
+    { ref: '[GRI 302/303]', text: 'Enerji ve su veri toplama sistemleri kurulmalıdır. Hedefler belirlenmelidir.' },
+    { ref: '[GRI 403]', text: 'İş Sağlığı & Güvenliği sistemleri ISO 45001 standartlarına uyumlu hale getirilmelidir.' },
+  ];
+
+  const material = [];
+  const topics = document.querySelectorAll('.gri-topic');
+  topics.forEach(t => {
+    if (parseInt(t.value) >= 4) {
+      const name = t.dataset.name || ('GRI ' + t.dataset.code);
+      material.push(`${name} — önem ${t.value}/5`);
+    }
   });
-  const catScore=(k)=>{ const s=rows.filter(r=>r.cat===k&&r.score!==null); return s.length? Math.round(s.reduce((a,b)=>a+b.score,0)/s.length):null; };
-  const eco=catScore('eco'), env=catScore('env'), soc=catScore('soc');
-  const parts=[eco,env,soc].filter(x=>x!==null);
-  const overall=parts.length? Math.round(parts.reduce((a,b)=>a+b,0)/parts.length):null;
-
-  const scored=rows.filter(r=>r.score!==null);
-  const strengths=[...scored].filter(r=>r.score>=75).sort((a,b)=>b.score-a.score).slice(0,3);
-  const weaks=[...scored].filter(r=>r.score<60).sort((a,b)=>a.score-b.score);
-  const filledCount=rows.filter(r=>r.filled).length;
-
-  analysis={ rows, eco, env, soc, overall, strengths, weaks, scored, filledCount,
-             status:getStatus(overall), coverage:Math.round(filledCount/METRICS.length*100) };
-  showResults();
-}
-
-function getStatus(s){
-  if(s===null) return {label:'VERİ YETERSİZ', cls:'badge-amber', color:'var(--warn)'};
-  if(s>=85) return {label:'LİDER', cls:'badge-teal', color:'var(--ok)'};
-  if(s>=70) return {label:'İLERİ', cls:'badge-teal', color:'var(--ok)'};
-  if(s>=50) return {label:'GELİŞİM', cls:'badge-amber', color:'var(--warn)'};
-  return {label:'BAŞLANGIÇ', cls:'badge-red', color:'var(--bad)'};
-}
-function scoreClass(s){ return s>=70?'sc-ok':s>=50?'sc-warn':'sc-bad'; }
-function scoreWord(s){ return s>=85?'Örnek':s>=70?'İyi':s>=50?'Orta':'Zayıf'; }
-
-/* ---------- Gauge SVG ---------- */
-function gauge(score){
-  const val=score===null?0:score;
-  const r=64, c=2*Math.PI*r, off=c*(1-val/100);
-  const col=score===null?'#8895a6':(val>=70?'#4ecdc4':val>=50?'#ffca28':'#ff6b6b');
-  return `<svg width="150" height="150" viewBox="0 0 150 150">
-    <circle cx="75" cy="75" r="${r}" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="12"/>
-    <circle cx="75" cy="75" r="${r}" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round"
-      stroke-dasharray="${c}" stroke-dashoffset="${c}" transform="rotate(-90 75 75)">
-      <animate attributeName="stroke-dashoffset" from="${c}" to="${off}" dur="1.1s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.2 0.8 0.2 1"/>
-    </circle>
-    <text x="75" y="72" text-anchor="middle" font-size="38" font-weight="800" fill="#fff" font-family="Inter,sans-serif">${score===null?'–':val}</text>
-    <text x="75" y="94" text-anchor="middle" font-size="12" fill="rgba(255,255,255,.6)" font-family="Inter,sans-serif">/ 100</text>
-  </svg>`;
-}
-
-function matchBenchmarks(){
-  const hay = ((org.activity||'')+' '+(org.summary||'')+' '+(org.title||'')).toLocaleLowerCase('tr');
-  return BENCHMARKS.map(b=>({ ...b, match: b.keys.some(k=>hay.includes(k)) }))
-                   .sort((a,b)=> (b.match?1:0)-(a.match?1:0));
-}
-function renderBenchmarks(targetId){
-  const list = matchBenchmarks();
-  const anyMatch = list.some(b=>b.match);
-  const cards = list.map(b=>`
-    <a class="ref-card ${b.match?'match':''}" href="${b.url}" target="_blank" rel="noopener">
-      <div class="ref-top"><span class="ref-sector">${b.sector}</span>${b.match?'<span class="ref-match-badge">Aynı sektör</span>':''}</div>
-      <div class="ref-company">${b.company}</div>
-      <div class="ref-meta"><span class="ref-std">${b.std}</span><span>${b.year}</span><span>· ${b.source}</span></div>
-      <span class="ref-open">Raporu aç →</span>
-    </a>`).join('');
-  const dirs = BENCHMARK_DIRS.map(d=>`<a href="${d.url}" target="_blank" rel="noopener">${d.name} →</a>`).join('');
-  document.getElementById(targetId).innerHTML =
-    `<p class="ref-intro">${anyMatch
-       ? 'Faaliyet alanınıza göre eşleştirilen <b>aynı sektörden</b> kamuya açık raporlar öne çıkarıldı. Kendi göstergelerinizi bu yayımlanmış raporlarla karşılaştırabilirsiniz.'
-       : 'Kamuya açık, yayımlanmış GRI/TSRS uyumlu örnek raporlar. Kendi göstergelerinizi kıyaslamak için farklı sektörlerden referanslar:'}</p>`+
-    `<div class="ref-list">${cards}</div>`+
-    `<div class="ref-dir"><span style="font-size:11px;color:var(--text-muted);font-weight:600;align-self:center;">Tüm raporlara göz at:</span>${dirs}</div>`+
-    `<p class="ref-note">Not: Bu raporlar ilgili şirketlerin kamuya açık yayımladığı belgelerdir; bağlantılar dış kaynaklara gider. Panel bu raporları otomatik okumaz — kıyaslamayı siz yaparsınız.</p>`;
-}
-
-function showResults(){
-  setStep(2); 
-  document.getElementById('res-title-main').textContent = org.title + ' · GRI Değerlendirmesi';
-  document.getElementById('res-badges').innerHTML =
-    `<span class="badge badge-blue">${org.activity}</span>`+
-    (SECTORS[org.sector].gri?`<span class="badge badge-blue badge-mono">${SECTORS[org.sector].gri}</span>`:'')+
-    `<span class="badge ${analysis.status.cls}">${analysis.status.label}</span>`+
-    `<span class="badge badge-blue">Kapsam %${analysis.coverage}</span>`;
-
-  document.getElementById('gauge-svg').innerHTML = gauge(analysis.overall);
-  document.getElementById('hero-status').textContent = 'Durum · '+analysis.status.label;
-  document.getElementById('hero-headline').textContent =
-    analysis.overall===null ? 'Skor için daha fazla gösterge girin'
-    : `Genel GRI olgunluk skoru: ${analysis.overall}/100`;
-  document.getElementById('hero-sub').textContent =
-    `${org.title}, ${analysis.filledCount} GRI göstergesi üzerinden değerlendirildi. `+
-    (analysis.overall===null?'Kategori ortalaması hesaplanamadı — lütfen skorlanabilir alanlardan en az birini doldurun.'
-     : `Ekonomik ${fmt(analysis.eco)}, çevresel ${fmt(analysis.env)}, sosyal ${fmt(analysis.soc)} kategori puanlarıyla "${analysis.status.label}" seviyesindedir.`);
-
-  // kategori kartları
-  const cg=document.getElementById('cat-scores');
-  cg.innerHTML=[['eco',CATS.eco,analysis.eco],['env',CATS.env,analysis.env],['soc',CATS.soc,analysis.soc]].map(([k,cat,sc])=>{
-    const n=analysis.rows.filter(r=>r.cat===k&&r.score!==null).length;
-    return `<div class="cat-score-card ${k}">
-      <div class="csc-top"><span class="csc-tag">${cat.code}</span><span class="csc-score">${sc===null?'–':sc}<span>/100</span></span></div>
-      <div class="csc-label">${cat.name}</div>
-      <div class="csc-bar"><div style="width:${sc||0}%"></div></div>
-      <div class="csc-meta">${n} skorlanan gösterge · ${sc===null?'veri yok':scoreWord(sc)}</div>
-    </div>`;
-  }).join('');
-
-  // önizleme
-  const topA = analysis.strengths[0];
-  const preview = analysis.overall===null
-    ? `${org.title} için girilen veriler bir genel skor hesaplamak için yeterli değil. Skorlanabilir en az bir gösterge girildiğinde kategori bazlı değerlendirme oluşturulur.`
-    : `${org.title}, ${org.year} raporlama dönemi için GRI Standartlarına göre değerlendirildi. `+
-      `Toplam ${analysis.filledCount} gösterge raporlandı ve genel olgunluk skoru ${analysis.overall}/100 (${analysis.status.label}) olarak belirlendi. `+
-      `${SECTORS[org.sector].note}`;
-  const finding = analysis.overall===null ? 'Öncelikli konu belirlemek için daha fazla gösterge gerekli.'
-    : (topA?`En güçlü alan: ${topA.code} — ${topA.name} (${topA.score}/100). `:'')+
-      (analysis.weaks.length?`Öncelikli gelişim alanları: ${analysis.weaks.slice(0,3).map(w=>w.code).join(', ')}.`:'Kritik seviyede zayıf gösterge tespit edilmedi.');
-
-  document.getElementById('preview-content').innerHTML =
-    `<div class="finding-block"><h4>Yönetici özeti</h4><p>${preview}</p></div>`+
-    `<div class="highlight-card"><div class="hl-label">⚑ Öne çıkan bulgu</div><p>${finding}</p></div>`;
-
-  renderBenchmarks('benchmark-content');
-
-  showSection('sec-results'); scrollTop();
-}
-function fmt(x){ return x===null?'—':x; }
-
-/* ---------- Tam Rapor ---------- */
-function renderFullReport(){
-  const a=analysis, sec=SECTORS[org.sector];
-  const dateStr=new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
-
-  // Gösterge tablosu
-  const tableRows=a.rows.map(r=>{
-    const catName=CATS[r.cat].name;
-    let scoreCell, cls;
-    if(!r.filled){ scoreCell='<span class="pill-score sc-info"><span class="pill-dot"></span>Raporlanmadı</span>'; }
-    else if(r.score===null){ scoreCell='<span class="pill-score sc-info"><span class="pill-dot"></span>Bilgi</span>'; }
-    else { cls=scoreClass(r.score); scoreCell=`<span class="pill-score ${cls}"><span class="pill-dot"></span>${r.score}/100</span>`; }
-    const valTxt = r.filled ? `${trnum(r.value)} <span style="color:var(--text-muted)">${r.unit}</span>` : '<span style="color:var(--text-muted)">—</span>';
-    const tgtTxt = r.target!==null ? `${r.target}${r.unit==='%'?'%':''}` : '—';
-    return `<tr>
-      <td class="t-code">${r.code}</td>
-      <td>${r.name}<div style="font-size:11px;color:var(--text-muted)">${catName}</div></td>
-      <td class="num">${valTxt}</td>
-      <td class="num">${tgtTxt}</td>
-      <td>${scoreCell}</td>
-    </tr>`;
-  }).join('');
-
-  // Bulgular
-  const findings=[];
-  if(a.overall!==null) findings.push(`Kuruluşun genel GRI olgunluk skoru <b>${a.overall}/100</b> ("${a.status.label}") seviyesindedir; bu ${a.filledCount} raporlanan gösterge üzerinden hesaplanmıştır.`);
-  [['Ekonomik',a.eco,'GRI 200'],['Çevresel',a.env,'GRI 300'],['Sosyal',a.soc,'GRI 400']].forEach(([n,s,c])=>{
-    if(s!==null) findings.push(`${c} — <b>${n}</b> kategorisi ${s}/100 (${scoreWord(s)}) performans göstermektedir.`);
-  });
-  if(a.strengths.length) findings.push(`En güçlü göstergeler: ${a.strengths.map(s=>s.code+' ('+s.score+')').join(', ')}.`);
-  if(a.weaks.length) findings.push(`Puanı 60'ın altında kalan ve öncelik gerektiren göstergeler: ${a.weaks.map(w=>w.code).join(', ')}.`);
-  findings.push(`Toplam ${METRICS.length} gösterge setinin %${a.coverage}'i raporlanmıştır; raporlama kapsamının genişletilmesi GRI uyumunu güçlendirir.`);
-
-  // Öneriler (zayıf → GRI atıflı)
-  const recTargets = a.weaks.length? a.weaks : a.scored.filter(r=>r.score<75).sort((x,y)=>x.score-y.score).slice(0,4);
-  let recList = recTargets.filter(r=>RECS[r.id]).map(r=>({ref:r.code,text:RECS[r.id]}));
-  if(recList.length===0){
-    recList=[{ref:'GRI 3',text:'Güçlü performans sürdürülüyor; öncelikli konuları (materiality) yıllık gözden geçirerek raporlama kapsamını derinleştirin.'},
-             {ref:'GRI 305-5',text:'Bilime dayalı emisyon azaltım hedefleri belirleyerek liderlik konumunu pekiştirin.'}];
-  }
-
-  // Öncelikli konular (GRI 3)
-  const material = a.weaks.slice(0,5).map(w=>`${w.code} · ${w.name}`);
-
-  const empDensity = org.employees? org.employees+' çalışan':'—';
 
   const html = `
   <div class="report-section">
     <h4><span class="rs-num">1</span>Yönetici Özeti</h4>
-    <p>${org.title}, ${org.year} raporlama dönemine ilişkin bu değerlendirmede <b>GRI Standartları</b> (Global Reporting Initiative) çerçevesine göre analiz edilmiştir. ${a.overall!==null?`Kuruluşun genel sürdürülebilirlik olgunluk skoru <b>${a.overall}/100</b> olup "${a.status.label}" seviyesindedir.`:'Genel skor için yeterli gösterge raporlanmamıştır.'}</p>
-    <p>${org.summary?org.summary+' ':''}${sec.note}</p>
+    <p><strong>${org.title}</strong> – ${org.location}</p>
+    <p>Bu GRI Sürdürülebilirlik Raporu, ${org.year} mali yılı için kuruluşumuzun ekonomik, çevresel ve sosyal etkilerini ölçmektedir. Rapor GRI Standartları 2021-2025 sürümlerine uygun olarak hazırlanmıştır.</p>
+    <p><strong>Raporlama Kapsamı:</strong> ${org.summary || '(Belirtilmedi)'}</p>
+    <p><strong>Yönetim Taahhüdü:</strong> ${org.strategy || '(Belirtilmedi)'}</p>
   </div>
 
   <div class="report-section">
-    <h4><span class="rs-num">2</span>Kuruluş Künyesi <span style="font-family:var(--mono);font-size:11px;color:var(--text-muted);font-weight:600">GRI 2</span></h4>
-    <dl class="kv">
-      <dt>Kuruluş adı (2-1)</dt><dd>${org.title}</dd>
-      <dt>Faaliyet alanı (2-6)</dt><dd>${org.activity}</dd>
-      <dt>Konum (2-1)</dt><dd>${org.location}</dd>
-      <dt>Çalışan sayısı (2-7)</dt><dd>${empDensity}</dd>
-      <dt>Raporlama dönemi (2-3)</dt><dd>${org.year}</dd>
-      <dt>Yıllık çıktı</dt><dd>${org.output?trnum(org.output)+' '+org.outunit:'—'}</dd>
-      <dt>Sektör standardı</dt><dd>${sec.name}${sec.gri?' ('+sec.gri+')':''}</dd>
-    </dl>
+    <h4><span class="rs-num">2</span>Kuruluş Profili (GRI 2-1 ile 2-8)</h4>
+    <table class="gri-table">
+      <tr><td><strong>Kuruluş Adı</strong></td><td>${org.title}</td></tr>
+      <tr><td><strong>Faaliyetler</strong></td><td>${org.activity || '—'}</td></tr>
+      <tr><td><strong>Merkez</strong></td><td>${org.location || '—'}</td></tr>
+      <tr><td><strong>Çalışan Sayısı</strong></td><td>${org.employees > 0 ? org.employees + ' (Tam zamanlı eşdeğer, GRI 2-7)' : '—'}</td></tr>
+      <tr><td><strong>Raporlama Dönemi</strong></td><td>Takvim yılı ${org.year} (GRI 2-3)</td></tr>
+      <tr><td><strong>Sektör</strong></td><td>${SECTORS[selectedSector]?.name || 'Genel'}</td></tr>
+    </table>
   </div>
 
   <div class="report-section">
-    <h4><span class="rs-num">3</span>Kategori Skorları</h4>
-    <div class="cat-score-grid" style="margin-bottom:4px">
-      ${[['eco',CATS.eco,a.eco],['env',CATS.env,a.env],['soc',CATS.soc,a.soc]].map(([k,cat,sc])=>`
-        <div class="cat-score-card ${k}">
-          <div class="csc-top"><span class="csc-tag">${cat.code}</span><span class="csc-score">${sc===null?'–':sc}<span>/100</span></span></div>
-          <div class="csc-label">${cat.name}</div>
-          <div class="csc-bar"><div style="width:${sc||0}%"></div></div>
-          <div class="csc-meta">${a.rows.filter(r=>r.cat===k&&r.score!==null).length} skorlanan gösterge</div>
-        </div>`).join('')}
+    <h4><span class="rs-num">3</span>Performans Özeti</h4>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 16px;">
+      <div class="score-card">
+        <div class="score-value">${fmtScore(analysis.overall)}</div>
+        <div class="score-label">Genel Performans</div>
+      </div>
+      <div class="score-card">
+        <div class="score-value" style="color: var(--eco);">${fmtScore(analysis.eco)}</div>
+        <div class="score-label">Ekonomik</div>
+      </div>
+      <div class="score-card">
+        <div class="score-value" style="color: var(--env);">${fmtScore(analysis.env)}</div>
+        <div class="score-label">Çevresel</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Veri kapsamı %${analysis.envCov}</div>
+      </div>
+      <div class="score-card">
+        <div class="score-value" style="color: var(--soc);">${fmtScore(analysis.soc)}</div>
+        <div class="score-label">Sosyal</div>
+      </div>
     </div>
+    <p style="font-size: 13px; color: var(--text-muted);">
+      <strong>Veri Kapsamı:</strong> ${analysis.coverage} / ${METRICS.length} gösterge için veri sağlanmıştır.<br>
+      <strong>Olgunluk Seviyesi:</strong> <span style="color: ${analysis.status.color}; font-weight: 700;">${analysis.status.label}</span>
+    </p>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:8px;background:var(--light-bg);padding:10px 12px;border-radius:6px;">
+      <strong>Puanlama notu:</strong> Performans puanları yön-duyarlı kıyas eşiklerine göre 0–100 arası hesaplanır
+      (ör. çalışan devir hızında düşük, kadın çalışan oranında %50'ye yakınlık daha iyidir).
+      Enerji, su, emisyon ve atık gibi mutlak hacim göstergeleri kuruluş büyüklüğüne bağlı olduğundan
+      hedef tanımlanmadan performans puanı verilmez; bunlar "Raporlandı" olarak gösterilir.
+    </p>
   </div>
 
   <div class="report-section">
     <h4><span class="rs-num">4</span>GRI Gösterge Tablosu (İçerik İndeksi)</h4>
-    <div style="overflow-x:auto">
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Aşağıda GRI Standards'e uygun rapor edilen tüm göstergeler listelenmiştir. Skor, değer ve hedeflere göre hesaplanmıştır.</p>
+    <div style="overflow-x: auto;">
       <table class="gri-table">
-        <thead><tr><th>GRI Kodu</th><th>Gösterge</th><th class="num">Değer</th><th class="num">Hedef</th><th>Skor</th></tr></thead>
+        <thead>
+          <tr>
+            <th>GRI Kodu</th>
+            <th>Gösterge Adı</th>
+            <th class="num">Rapor Edilen Değer</th>
+            <th class="num">Kıyas / Hedef</th>
+            <th>Skor</th>
+          </tr>
+        </thead>
         <tbody>${tableRows}</tbody>
       </table>
     </div>
   </div>
 
   <div class="report-section">
-    <h4><span class="rs-num">5</span>Temel Bulgular</h4>
-    ${findings.map((f,i)=>`<div class="list-item"><div class="list-dot">${i+1}</div><span>${f}</span></div>`).join('')}
+    <h4><span class="rs-num">5</span>Yönetişim & Stratejisi (GRI 2-9 ile 2-28)</h4>
+    <h5 style="color: var(--primary); margin-top: 16px; font-weight: 700;">Yönetim Yapısı (GRI 2-9, 2-12)</h5>
+    <p>${org.governance || '(Belirtilmedi)'}</p>
+    
+    <h5 style="color: var(--primary); margin-top: 16px; font-weight: 700;">Sürdürülebilirlik Stratejisi (GRI 2-22)</h5>
+    <p>${org.strategy || '(Belirtilmedi)'}</p>
+    
+    <h5 style="color: var(--primary); margin-top: 16px; font-weight: 700;">Politikalar (GRI 2-23, 2-24)</h5>
+    <p>${org.policies || '(Belirtilmedi)'}</p>
+    
+    <h5 style="color: var(--primary); margin-top: 16px; font-weight: 700;">Paydaş Katılım (GRI 2-29)</h5>
+    <p>${org.stakeholder || '(Belirtilmedi)'}</p>
+    
+    <h5 style="color: var(--primary); margin-top: 16px; font-weight: 700;">Şikayetler & Uyum (GRI 2-25, 2-26)</h5>
+    <p>${org.remediation || '(Belirtilmedi)'}</p>
   </div>
 
   <div class="report-section">
-    <h4><span class="rs-num">6</span>Öneriler ve Eylem Planı</h4>
-    ${recList.map((r,i)=>`<div class="list-item rec-item"><div class="list-dot">${i+1}</div><span><span class="rec-ref">${r.ref}</span>${r.text}</span></div>`).join('')}
+    <h4><span class="rs-num">6</span>Material Topics (GRI 3-1, 3-2, 3-3)</h4>
+    ${material.length > 0 
+      ? `<p><strong>Tanımlanan Kritik Alanlar:</strong></p>
+         <ul style="margin-left: 20px;">
+           ${material.map(m => `<li>${m}</li>`).join('')}
+         </ul>
+         <p style="margin-top: 12px;">Bu alanlar kuruluşunuzun stratejisi ve paydaş beklentileri çerçevesinde en önemli kabul edilmektedir. GRI 3-3 uyarınca her bir material topic için yönetim yaklaşımı belgelenmiştir.</p>`
+      : `<p>Henüz material topics (önemli konular) tanımlanmamıştır. GRI 3 prosedürünü takip ederek 4 adım tamamlanmalıdır.</p>`
+    }
   </div>
 
   <div class="report-section">
-    <h4><span class="rs-num">7</span>Öncelikli Konular <span style="font-family:var(--mono);font-size:11px;color:var(--text-muted);font-weight:600">GRI 3</span></h4>
-    ${material.length
-      ? `<p>GRI 3: Öncelikli Konular (2021) uyarınca, düşük performanslı göstergelere karşılık gelen aşağıdaki konuların önümüzdeki dönemde öncelikli (material) konu olarak ele alınması önerilir:</p>`+
-        material.map(m=>`<div class="list-item"><div class="list-dot">•</div><span>${m}</span></div>`).join('')
-      : `<p>Raporlanan göstergelerde kritik düzeyde zayıf alan bulunmadığından, mevcut öncelikli konuların GRI 3 kapsamında yıllık olarak yeniden değerlendirilmesi yeterlidir.</p>`}
+    <h4><span class="rs-num">7</span>Temel Bulgular & Öneriler</h4>
+    ${findings.map((f, i) => `<div class="list-item"><div class="list-dot">${i+1}</div><span>${f}</span></div>`).join('')}
+    
+    <h5 style="color: var(--primary); margin-top: 20px; font-weight: 700;">Eylem Planı & İyileştirmeler</h5>
+    ${recommendations.map((r, i) => `<div class="list-item rec-item"><div class="list-dot">${i+1}</div><span><span class="rec-ref">${r.ref}</span>${r.text}</span></div>`).join('')}
   </div>
 
   <div class="report-section">
     <h4><span class="rs-num">8</span>Sonraki Adımlar</h4>
-    <p>1) Raporlanmayan göstergeler için veri toplama süreçleri kurularak GRI kapsamının genişletilmesi. 2) Öncelikli gelişim alanlarında ölçülebilir yıllık hedefler tanımlanması. 3) İlgili yönetim yaklaşımlarının (GRI 3-3) belgelenmesi. 4) Altı–on iki ay sonra takip değerlendirmesi yapılarak ilerlemenin izlenmesi.</p>
-    <div class="disclaimer"><b>Metodoloji notu:</b> Bu rapor, kullanıcı tarafından girilen verilerin GRI gösterge kodlarıyla eşleştirilmesiyle üretilen gösterge temelli bir <i>olgunluk değerlendirmesidir</i>. Skorlar, kullanıcı/varsayılan referans hedeflerine göre hesaplanır ve GRI Standartları'nın resmî bir "uygunluk" ya da derecelendirme sonucu değildir. GRI'ye tam uyumlu bir rapor için ilgili standartların tüm zorunlu açıklamaları ve GRI 1: Temel (2021) ilkeleri karşılanmalıdır.</div>
+    <p>1) <strong>GRI 3 Material Topics Süreci:</strong> 4 adımı tamamlayarak malzeme konuları resmileştirin. 2) <strong>Veri Yönetimi:</strong> Eksik göstergeler için veri toplama sistemleri kurun. 3) <strong>Hedef Belirleme:</strong> Her material topic için ölçülebilir yıllık hedefler tanımlayın. 4) <strong>Yönetim Yaklaşımları:</strong> GRI 3-3'e göre her konu için dokumentasyon yapın. 5) <strong>Bağımsız Kontrol:</strong> Veriler için bağımsız onay ve belgelendirme düşünün.</p>
+  </div>
+
+  <div class="report-section" style="background: var(--eco-light); border-left: 4px solid var(--eco);">
+    <h4 style="color: var(--eco); margin-top: 0;">ℹ️ GRI Uyum Notu</h4>
+    <p style="font-size: 13px; margin: 8px 0 0 0;">Bu rapor, kullanıcı tarafından girilen verilerin GRI Standartları gösterge kodlarıyla eşleştirilmesiyle üretilen bir <i>ön olgunluk değerlendirmesidir</i>. Tam GRI uyumluluğu için şunlar gereklidir: (i) GRI 1: Foundation 2021 prensiplerinin uygulanması, (ii) GRI 2: Tüm genel açıklamaların sunulması, (iii) GRI 3: Material topics ve yönetim yaklaşımlarının belgelenmesi, (iv) Seçili Topic Standards'ın tam uygulanması, (v) Bağımsız onay ve belgelendirme.</p>
   </div>
 
   <div class="report-section">
-    <h4><span class="rs-num">9</span>Sektör Kıyaslaması · Referans Raporlar</h4>
-    ${(()=>{ const list=matchBenchmarks(); const anyMatch=list.some(b=>b.match);
-      return `<p>${anyMatch?'Faaliyet alanınıza göre eşleştirilen aynı sektörden kamuya açık raporlar öne çıkarılmıştır.':'Kıyaslama için farklı sektörlerden kamuya açık, yayımlanmış GRI/TSRS uyumlu örnek raporlar.'}</p>`+
-      `<div class="ref-list" style="margin-top:8px">`+
-      list.map(b=>`<a class="ref-card ${b.match?'match':''}" href="${b.url}" target="_blank" rel="noopener">
-        <div class="ref-top"><span class="ref-sector">${b.sector}</span>${b.match?'<span class="ref-match-badge">Aynı sektör</span>':''}</div>
-        <div class="ref-company">${b.company}</div>
-        <div class="ref-meta"><span class="ref-std">${b.std}</span><span>${b.year} · ${b.source}</span></div>
-        <span class="ref-open">Raporu aç →</span></a>`).join('')+
-      `</div>`+
-      `<div class="ref-dir">${BENCHMARK_DIRS.map(d=>`<a href="${d.url}" target="_blank" rel="noopener">${d.name} →</a>`).join('')}</div>`+
-      `<p class="ref-note">Bağlantılar ilgili şirketlerin kamuya açık raporlarına gider. Kıyaslama kullanıcı tarafından yapılır.</p>`;
-    })()}
+    <h4><span class="rs-num">9</span>Kaynaklar ve Linkler</h4>
+    <ul style="margin-left: 20px; font-size: 13px;">
+      <li><a href="https://www.globalreporting.org" style="color: var(--accent); text-decoration: none;">Global Reporting Initiative (GRI) - www.globalreporting.org</a></li>
+      <li><a href="https://www.globalreporting.org/standards/" style="color: var(--accent); text-decoration: none;">GRI Standards - Resmi Standartlar Sayfası</a></li>
+      <li>GRI 1: Foundation 2021 - Evrensel temel ilkeler</li>
+      <li>GRI 2: General Disclosures 2021 - Kuruluş profili, yönetişim, stratejisi</li>
+      <li>GRI 3: Material Topics 2021 - Material topics belirleme süreci</li>
+      <li>GRI 200-400 Series - Spesifik konu standartları</li>
+    </ul>
   </div>
 
-  <div class="report-foot">GRI Sürdürülebilirlik Raporlama Paneli · ${org.title} · ${dateStr}</div>`;
+  <div class="report-brand-foot" style="margin-top: 40px; padding-top: 24px; border-top: 2px solid var(--border); text-align: center;">
+    <img src="${NEKS_LOGO}" alt="${BRAND_NAME}" style="width: 56px; height: 56px; object-fit: contain; margin-bottom: 8px;">
+    <div style="font-size: 15px; font-weight: 800; color: var(--primary);">${BRAND_NAME}</div>
+    <div style="font-size: 13px; color: var(--text-dark); margin-top: 6px;">Raporu Oluşturan: <strong>${REPORT_AUTHOR}</strong></div>
+    <div style="font-size: 11px; color: var(--text-muted); margin-top: 10px;">
+      GRI Sürdürülebilirlik Raporlama Paneli · ${org.title} · ${dateStr}
+    </div>
+  </div>
+  `;
 
-  document.getElementById('full-report-content').innerHTML=html;
+  document.getElementById('full-report-content').innerHTML = html;
+  switchTab(4);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  document.getElementById('status').innerHTML = `Rapor Hazırlandı: ${analysis.status.label}`;
 }
 
-function trnum(x){ if(x===null||x===undefined||isNaN(x)) return '—'; return Number(x).toLocaleString('tr-TR',{maximumFractionDigits:2}); }
-
-/* ---------- Demo ---------- */
-function loadDemo(){
-  document.getElementById('inp-title').value='Örnek Tekstil Sanayi A.Ş.';
-  document.getElementById('inp-activity').value='Örme kumaş üretimi';
-  document.getElementById('inp-location').value='Bursa, Türkiye';
-  document.getElementById('inp-employees').value=240;
-  document.getElementById('inp-year').value=2025;
-  document.getElementById('inp-output').value=5000;
-  document.getElementById('inp-outunit').value='ton kumaş';
-  document.getElementById('inp-summary').value='Orta ölçekli bir tekstil üreticisi olarak enerji verimliliği ve su geri kazanımına odaklanıyoruz.';
-  const genelBtn=document.querySelector('.sector-btn'); if(genelBtn){ selectSector(genelBtn,'genel'); }
-}
-const DEMO_VALUES={ m201_1:820, m204_1:52, m205_2:70, m205_3:0, m207_1:0,
-  m301_2:18, m302_1:41000, m302_3:9.4, m303_5:6.2, m305_1:3100, m305_2:2450, m305_4:172, m305_5:3, m306_4:64,
-  m401_1:19, m403_9:1.4, m404_1:14, m405_1:28, m405_2:0.93 };
-function fillDemoMetrics(){ METRICS.forEach(m=>{ const el=document.getElementById('in-'+m.id); if(el&&DEMO_VALUES[m.id]!==undefined) el.value=DEMO_VALUES[m.id]; }); }
-
-/* ---------- Dışa aktarım ---------- */
-function downloadJSON(){
-  const data={ kurulus:org, analiz:{ genel:analysis.overall, ekonomik:analysis.eco, cevresel:analysis.env, sosyal:analysis.soc, durum:analysis.status.label, kapsam:analysis.coverage,
-    gostergeler:analysis.rows.map(r=>({kod:r.code, ad:r.name, deger:r.value, birim:r.unit, hedef:r.target, skor:r.score})) },
-    tarih:new Date().toLocaleDateString('tr-TR'), cerceve:'GRI Standards', versiyon:'1.0' };
-  dl(JSON.stringify(data,null,2),'application/json',(org.title||'gri').replace(/\s+/g,'_')+'_GRI_rapor.json');
-}
-function downloadHTML(){
-  const rep=document.getElementById('full-report-content').innerHTML;
-  const css=document.querySelector('style').innerHTML;
-  const doc=`<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><title>${org.title} · GRI Raporu</title><style>${css} body{padding:32px;max-width:900px;margin:0 auto}</style></head><body><h1 style="color:var(--primary);font-size:26px;margin-bottom:20px">${org.title} · GRI Sürdürülebilirlik Raporu</h1><div class="report-doc">${rep}</div></body></html>`;
-  dl(doc,'text/html',(org.title||'gri').replace(/\s+/g,'_')+'_GRI_rapor.html');
-}
-function dl(content,type,name){ const b=new Blob([content],{type}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u); }
-
-function resetAll(){
-  ['inp-title','inp-activity','inp-location','inp-employees','inp-year','inp-output','inp-outunit','inp-summary'].forEach(id=>document.getElementById(id).value='');
-  document.querySelectorAll('.sector-btn').forEach(b=>b.classList.remove('selected'));
-  document.getElementById('loading-steps').innerHTML='';
-  selectedSector='genel'; org={}; analysis={};
-  setStep(0); showSection('sec-info'); scrollTop();
+function downloadJSON() {
+  const data = {
+    kurulus: org,
+    analiz: {
+      genel: analysis.overall,
+      ekonomik: analysis.eco,
+      cevresel: analysis.env,
+      sosyal: analysis.soc,
+      durum: analysis.status.label,
+      kapsam: analysis.coverage,
+      gostergeler: analysis.rows.map(r => ({
+        kod: r.code,
+        ad: r.name,
+        deger: r.value,
+        birim: r.unit,
+        skor: r.score
+      }))
+    },
+    tarih: new Date().toLocaleDateString('tr-TR'),
+    cerceve: 'GRI Standards 2021-2025',
+    versiyon: '2.0'
+  };
+  downloadFile(JSON.stringify(data, null, 2), 'application/json', (org.title || 'gri').replace(/\s+/g, '_') + '_GRI_rapor.json');
 }
 
-setStep(0);
+// Rapor girildi mi kontrolü
+function reportReady() {
+  if (!org || !org.title || !analysis || !analysis.rows) {
+    alert('Önce 4. adımda "Rapor Oluştur" ile raporu üretin.');
+    return false;
+  }
+  return true;
+}
+
+// PDF/HTML çıktısı için baskıya uygun, kendine yeten stil
+function pdfReportCss() {
+  return `
+  :root{
+    --primary:#082650;--accent:#0a7c6e;--eco:#2f6bd8;--eco-light:#eaf1fc;
+    --env:#0a7c6e;--env-light:#e6f4f1;--soc:#b5560f;--accent-light:#e6f4f1;
+    --ok:#0a7c6e;--warn:#c98a00;--bad:#d32f2f;
+    --text-dark:#0d1b2a;--text-muted:#5a6a7e;--border:#e2e6ec;--light-bg:#f7f8fa;
+  }
+  *{box-sizing:border-box;}
+  .pdf-root{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+    color:#0d1b2a;background:#fff;width:750px;margin:0 auto;line-height:1.5;font-size:13px;}
+  .pdf-root h1,.pdf-root h2,.pdf-root h3,.pdf-root h4,.pdf-root h5{margin:0;}
+  .pdf-cover{background:#082650;color:#fff;padding:34px 34px 28px;border-radius:12px;margin-bottom:22px;}
+  .pdf-cover .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4ecdc4;font-weight:700;margin-bottom:12px;}
+  .pdf-cover-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
+  .pdf-cover-logo{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;}
+  .pdf-cover-logo img{width:66px;height:66px;object-fit:contain;background:#fff;border-radius:12px;padding:8px;}
+  .pdf-cover-logo span{font-size:10px;font-weight:700;color:rgba(255,255,255,.85);text-align:center;max-width:90px;line-height:1.3;}
+  .pdf-cover h1{font-size:25px;font-weight:800;line-height:1.2;margin-bottom:6px;}
+  .pdf-cover .sub{font-size:14px;color:rgba(255,255,255,.72);}
+  .pdf-cover .meta{display:flex;flex-wrap:wrap;gap:14px 26px;margin-top:20px;font-size:12px;color:rgba(255,255,255,.85);}
+  .pdf-cover .meta div span{display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:2px;}
+  .pdf-cover .meta div b{font-size:13px;font-weight:700;color:#fff;}
+  .report-section{background:#fff;border:1px solid #e2e6ec;border-left:4px solid #0a7c6e;
+    border-radius:8px;padding:16px 18px;margin-bottom:14px;page-break-inside:avoid;break-inside:avoid;}
+  .report-section h4{font-size:15px;color:#082650;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-weight:700;}
+  .rs-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;min-width:26px;
+    background:#0a7c6e;color:#fff;border-radius:50%;font-weight:700;font-size:12px;}
+  .report-section h5{font-size:13px;color:#082650;margin:14px 0 4px;font-weight:700;}
+  .report-section p{margin:0 0 8px;font-size:13px;}
+  .gri-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px;}
+  .gri-table th{background:#f2f5f8;color:#082650;text-align:left;font-weight:700;padding:8px 10px;border:1px solid #e2e6ec;}
+  .gri-table td{padding:8px 10px;border:1px solid #e2e6ec;vertical-align:top;}
+  .gri-table .num{text-align:right;font-variant-numeric:tabular-nums;}
+  .score-card{border:1px solid #e2e6ec;border-radius:8px;padding:12px 8px;text-align:center;background:#fff;}
+  .score-value{font-size:26px;font-weight:800;color:#0a7c6e;line-height:1.1;}
+  .score-label{font-size:12px;color:#5a6a7e;font-weight:600;margin-top:2px;}
+  .list-item{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start;}
+  .list-dot{width:20px;height:20px;min-width:20px;background:#0a7c6e;color:#fff;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+  .rec-item .list-dot{background:#c98a00;}
+  .rec-ref{font-family:'SFMono-Regular',Consolas,monospace;font-size:11px;font-weight:700;color:#c98a00;margin-right:5px;}
+  .pdf-root ul{margin:6px 0 6px 18px;}
+  .pdf-root li{margin-bottom:3px;font-size:13px;}
+  .pdf-root a{color:#0a7c6e;text-decoration:none;}
+  .report-brand-foot{page-break-inside:avoid;break-inside:avoid;}
+  .report-brand-foot img{width:56px;height:56px;object-fit:contain;}
+  `;
+}
+
+// Kapak bloğu
+function reportCoverHTML() {
+  const dateStr = new Date().toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' });
+  const sector = SECTORS[selectedSector]?.name || 'Genel';
+  return `
+  <div class="pdf-cover">
+    <div class="pdf-cover-top">
+      <div>
+        <div class="eyebrow">GRI Standards 2021–2025 · Sürdürülebilirlik Raporu</div>
+        <h1>${org.title}</h1>
+        <div class="sub">${org.activity || 'Sürdürülebilirlik performans değerlendirmesi'}${org.location ? ' · ' + org.location : ''}</div>
+      </div>
+      <div class="pdf-cover-logo"><img src="${NEKS_LOGO}" alt="${BRAND_NAME}"><span>${BRAND_NAME}</span></div>
+    </div>
+    <div class="meta">
+      <div><span>Raporlama Yılı</span><b>${org.year || '—'}</b></div>
+      <div><span>Sektör</span><b>${sector}</b></div>
+      <div><span>Olgunluk</span><b>${analysis.status?.label || '—'}</b></div>
+      <div><span>Veri Kapsamı</span><b>${analysis.coverage} / ${METRICS.length}</b></div>
+      <div><span>Tarih</span><b>${dateStr}</b></div>
+    </div>
+  </div>`;
+}
+
+function downloadHTML() {
+  if (!reportReady()) return;
+  const rep = document.getElementById('full-report-content').innerHTML;
+  const doc = `<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8">`
+    + `<meta name="viewport" content="width=device-width, initial-scale=1.0">`
+    + `<title>${org.title} · GRI Raporu</title><style>${pdfReportCss()} body{background:#f0f2f5;padding:28px;}</style></head>`
+    + `<body><div class="pdf-root">${reportCoverHTML()}${rep}</div></body></html>`;
+  downloadFile(doc, 'text/html', (org.title || 'gri').replace(/\s+/g, '_') + '_GRI_rapor.html');
+}
+
+function downloadPDF() {
+  if (!reportReady()) return;
+  if (typeof html2pdf === 'undefined') {
+    alert('PDF kütüphanesi yüklenemedi. İnternet bağlantınızı kontrol edin veya "HTML İndir" ile alıp tarayıcıdan yazdırın.');
+    return;
+  }
+  const rep = document.getElementById('full-report-content').innerHTML;
+
+  // Ekran dışı, sabit genişlikli bir kapsayıcıda baskı düzenini oluştur
+  const holder = document.createElement('div');
+  holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:750px;background:#fff;';
+  holder.innerHTML = `<style>${pdfReportCss()}</style><div class="pdf-root">${reportCoverHTML()}${rep}</div>`;
+  document.body.appendChild(holder);
+  const target = holder.querySelector('.pdf-root');
+
+  const opt = {
+    margin: [10, 10, 14, 10],
+    filename: (org.title || 'gri').replace(/\s+/g, '_') + '_GRI_rapor.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, backgroundColor: '#ffffff', useCORS: true, windowWidth: 800 },
+    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compress: true },
+    pagebreak: { mode: ['css', 'legacy'], avoid: ['.report-section', 'tr', '.score-card'] }
+  };
+
+  const cleanup = () => { if (holder.parentNode) holder.parentNode.removeChild(holder); };
+
+  html2pdf().set(opt).from(target).toPdf().get('pdf').then(pdf => {
+    // Her sayfaya alt bilgi ve sayfa numarası ekle
+    const total = pdf.internal.getNumberOfPages();
+    const w = pdf.internal.pageSize.getWidth();
+    const h = pdf.internal.pageSize.getHeight();
+    for (let i = 1; i <= total; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(8);
+      pdf.setTextColor(150);
+      pdf.text(`${BRAND_NAME} · ${org.title}`, 10, h - 6);
+      pdf.text(`Sayfa ${i} / ${total}`, w - 10, h - 6, { align: 'right' });
+    }
+  }).save().then(cleanup, cleanup);
+}
+
+function downloadFile(content, type, name) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetAll() {
+  if (!confirm('Tüm verileri silmek istediğinizden emin misiniz?')) return;
+  ['inp-title', 'inp-activity', 'inp-location', 'inp-employees', 'inp-year', 'inp-output', 'inp-outunit', 'inp-summary', 'inp-governance', 'inp-strategy', 'inp-policies', 'inp-stakeholder', 'inp-remediation'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.querySelectorAll('.sector-btn').forEach(b => b.classList.remove('selected'));
+  METRICS.forEach(m => {
+    const el = document.getElementById('in-' + m.id);
+    if (el) el.value = '';
+  });
+  // Material topics kaydırıcılarını varsayılana çek
+  document.querySelectorAll('.gri-topic').forEach(t => {
+    t.value = t.getAttribute('value') || 3;
+    t.dispatchEvent(new Event('input'));
+  });
+  document.getElementById('full-report-content').innerHTML = REPORT_PLACEHOLDER;
+  switchTab(0);
+  selectedSector = 'genel';
+  org = {};
+  analysis = {};
+  document.getElementById('status').innerHTML = 'Hazırlık Aşaması';
+}
+
+// Puanı ≥4 olan konuların listesini oluşturup readonly textarea'ya yazar
+function updateMaterialList() {
+  const selected = [];
+  document.querySelectorAll('.gri-topic').forEach(t => {
+    if (parseInt(t.value) >= 4) {
+      const name = t.dataset.name || ('GRI ' + t.dataset.code);
+      selected.push(`• ${name} — önem ${t.value}/5`);
+    }
+  });
+  const box = document.getElementById('material-topics-list');
+  if (box) {
+    box.value = selected.length
+      ? selected.join('\n')
+      : 'Henüz önem puanı ≥ 4 olan konu yok. Kaydırıcıları ayarlayın.';
+  }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  // Sektör çipleri
+  const chipHTML = Object.entries(SECTORS).map(([k, v]) =>
+    `<div class="series-chip"><div class="dot" style="background: ${v.color}"></div>${v.name}</div>`
+  ).join('');
+  document.getElementById('series-chips').innerHTML = chipHTML;
+
+  // Material topics kaydırıcıları: değer rozeti + canlı güncelleme
+  document.querySelectorAll('.gri-topic').forEach(slider => {
+    if (slider.closest('.topic-ctrl')) return; // zaten işlenmiş, tekrar sarma
+    // Konu adını sarmalamadan ÖNCE yakala (etiket span'i bu aşamada kardeş)
+    const labelEl = slider.parentElement.querySelector('span');
+    slider.dataset.name = labelEl ? labelEl.textContent.trim() : ('GRI ' + slider.dataset.code);
+    // Kaydırıcıyı bir kontrol sarmalayıcısına al ve değer rozeti ekle
+    const wrap = document.createElement('div');
+    wrap.className = 'topic-ctrl';
+    slider.parentNode.insertBefore(wrap, slider);
+    wrap.appendChild(slider);
+    const badge = document.createElement('span');
+    badge.className = 'topic-val';
+    wrap.appendChild(badge);
+
+    const sync = () => {
+      badge.textContent = slider.value;
+      badge.classList.toggle('hi', parseInt(slider.value) >= 4);
+    };
+    slider.addEventListener('input', () => { sync(); updateMaterialList(); });
+    sync();
+  });
+  updateMaterialList();
+});
 </script>
+
 </body>
 </html>
