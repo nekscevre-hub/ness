@@ -52,8 +52,18 @@
   }
   .nav-brand strong { display: block; font-size: 14px; font-weight: 800; color: var(--primary); letter-spacing: .04em; }
   .nav-brand span { font-size: 11px; color: var(--text-muted); letter-spacing: .02em; }
-  .nav-right { font-size: 12px; color: var(--text-muted); font-family: var(--mono); }
-  .nav-right b { color: var(--accent); }
+  .nav-right { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text-muted); font-family: var(--mono); }
+  .nav-status { display: none; }
+  .nav-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--primary); text-decoration: none;
+    padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--white); transition: all .2s; white-space: nowrap;
+  }
+  .nav-back:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 4px 12px rgba(10,124,110,.12); }
+  .nav-status b { color: var(--accent); }
+  @media (min-width: 620px) { .nav-status { display: inline; } }
 
   /* HEADER */
   .page-header { background: var(--primary); padding: 68px 40px 60px; position: relative; overflow: hidden; }
@@ -251,14 +261,17 @@
 <body>
 
 <nav>
-  <a class="nav-logo" href="#">
+  <a class="nav-logo" href="/" title="NEKS Çevre Teknolojileri - Anasayfa">
     <div class="nav-mark">GRI</div>
     <div class="nav-brand">
       <strong>GRI Raporlama</strong>
       <span>Sürdürülebilirlik Paneli</span>
     </div>
   </a>
-  <div class="nav-right">GRI Standards 2021–2025 · <b id="status">Hazırlık Aşaması</b></div>
+  <div class="nav-right">
+    <span class="nav-status">GRI Standards 2021–2025 · <b id="status">Hazırlık Aşaması</b></span>
+    <a class="nav-back" href="/" title="NEKS Ana Sayfaya Dön">← Siteye Dön</a>
+  </div>
 </nav>
 
 <div class="page-header">
