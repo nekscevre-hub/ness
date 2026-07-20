@@ -115,7 +115,6 @@
 </script>
 
 <title>GRI Raporu Hazırlama Aracı – GRI Sürdürülebilirlik Raporlama | NEKS Çevre</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root {
     --primary: #082650;
@@ -637,7 +636,7 @@
           <div class="metric-label">Doğrudan Ekonomik Değer (201-1)</div>
           <div class="metric-code">GRI-201-1</div>
           <div class="metric-row">
-            <div><span style="font-size: 12px; color: var(--text-muted);">Gelir</span></div>
+            <div><span style="font-size: 12px; color: var(--text-muted);">Gelir (Milyon ₺)</span></div>
             <div><input type="number" id="in-m201_1" class="metric-input" placeholder="0" data-gri="201-1"></div>
           </div>
         </div>
@@ -748,9 +747,7 @@
     <h2 class="section-title">GRI Sürdürülebilirlik Raporu</h2>
     
     <div class="btn-row">
-      <button class="btn btn-accent" onclick="downloadJSON()">📥 JSON İndir</button>
-      <button class="btn btn-accent" onclick="downloadHTML()">📄 HTML İndir</button>
-      <button class="btn btn-accent" onclick="downloadPDF()">📑 PDF İndir</button>
+      <button class="btn btn-accent" onclick="downloadPDF()">📑 Raporu İndir</button>
       <button class="btn" onclick="resetAll()">Sıfırla</button>
     </div>
 
@@ -1321,7 +1318,12 @@ function pdfReportCss() {
   .pdf-cover .meta div span{display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:2px;}
   .pdf-cover .meta div b{font-size:13px;font-weight:700;color:#fff;}
   .report-section{background:#fff;border:1px solid #e2e6ec;border-left:4px solid #0a7c6e;
-    border-radius:8px;padding:16px 18px;margin-bottom:14px;page-break-inside:avoid;break-inside:avoid;}
+    border-radius:8px;padding:16px 18px;margin-bottom:14px;page-break-inside:auto;break-inside:auto;}
+  /* Uzun bölümler (ör. gösterge tablosu) sayfaya sığmadığında güvenli noktalardan bölünsün;
+     başlıklar içerikten kopmasın, satır/kart/madde parçalanmasın */
+  .report-section h4,.report-section h5{page-break-after:avoid;break-after:avoid;}
+  .gri-table tr,.score-card,.list-item{page-break-inside:avoid;break-inside:avoid;}
+  .gri-table thead{display:table-header-group;}
   .report-section h4{font-size:15px;color:#082650;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-weight:700;}
   .rs-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;min-width:26px;
     background:#0a7c6e;color:#fff;border-radius:50%;font-weight:700;font-size:12px;}
@@ -1381,45 +1383,85 @@ function downloadHTML() {
   downloadFile(doc, 'text/html', (org.title || 'gri').replace(/\s+/g, '_') + '_GRI_rapor.html');
 }
 
+// Raporu baskıya uygun, kendine yeten bir HTML belgesine dönüştürür.
+// Türkçe karakterler, arka plan renkleri ve sayfa geçişleri tarayıcının kendi
+// (vektörel) baskı motoruyla doğru işlenir; html2canvas kaynaklı kırpılma,
+// kayma ve bulanıklık sorunları ortadan kalkar. Kullanıcı açılan pencerede
+// "Hedef: PDF olarak kaydet" seçerek dosyayı indirir.
+function buildPrintDoc() {
+  const rep = document.getElementById('full-report-content').innerHTML;
+  // Not: Sabit (position:fixed) sayfa alt bilgisi, tarayıcı baskısında akışta yer
+  // ayırmadığı için sayfa altına denk gelen bölüm kutularının üzerine biniyordu
+  // ("yazı üstüne binme"). Kaldırıldı. Marka/tarih bloğu raporun son sayfasında
+  // zaten yer alıyor; sayfa numaralarını tarayıcının kendi alt bilgisi sağlar.
+  return `<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8">`
+    + `<meta name="viewport" content="width=device-width, initial-scale=1.0">`
+    + `<title>${(org.title || 'GRI')} - GRI Raporu</title>`
+    + `<style>${pdfReportCss()}`
+    + ` html,body,*{-webkit-print-color-adjust:exact;print-color-adjust:exact;}`
+    + ` @page{size:A4;margin:14mm 12mm;}`
+    + ` body{background:#fff;margin:0;-webkit-text-size-adjust:100%;}`
+    + ` .pdf-root{width:auto;max-width:186mm;margin:0 auto;}`
+    + `</style></head><body>`
+    + `<div class="pdf-root">${reportCoverHTML()}${rep}</div>`
+    + `</body></html>`;
+}
+
 function downloadPDF() {
   if (!reportReady()) return;
-  if (typeof html2pdf === 'undefined') {
-    alert('PDF kütüphanesi yüklenemedi. İnternet bağlantınızı kontrol edin veya "HTML İndir" ile alıp tarayıcıdan yazdırın.');
-    return;
-  }
-  const rep = document.getElementById('full-report-content').innerHTML;
 
-  // Ekran dışı, sabit genişlikli bir kapsayıcıda baskı düzenini oluştur
-  const holder = document.createElement('div');
-  holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:750px;background:#fff;';
-  holder.innerHTML = `<style>${pdfReportCss()}</style><div class="pdf-root">${reportCoverHTML()}${rep}</div>`;
-  document.body.appendChild(holder);
-  const target = holder.querySelector('.pdf-root');
+  const btn = document.querySelector('button[onclick="downloadPDF()"]');
+  const btnText = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Rapor hazırlanıyor…'; }
 
-  const opt = {
-    margin: [10, 10, 14, 10],
-    filename: (org.title || 'gri').replace(/\s+/g, '_') + '_GRI_rapor.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, backgroundColor: '#ffffff', useCORS: true, windowWidth: 800 },
-    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compress: true },
-    pagebreak: { mode: ['css', 'legacy'], avoid: ['.report-section', 'tr', '.score-card'] }
+  const html = buildPrintDoc();
+
+  // Gizli iframe içinde yazdır: açılır pencere engelleyicilerine takılmaz.
+  let frame = document.getElementById('gri-print-frame');
+  if (frame && frame.parentNode) frame.parentNode.removeChild(frame);
+  frame = document.createElement('iframe');
+  frame.id = 'gri-print-frame';
+  frame.setAttribute('aria-hidden', 'true');
+  frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;';
+  document.body.appendChild(frame);
+
+  const cleanup = () => {
+    if (btn) { btn.disabled = false; btn.innerHTML = btnText; }
+    if (frame && frame.parentNode) frame.parentNode.removeChild(frame);
   };
 
-  const cleanup = () => { if (holder.parentNode) holder.parentNode.removeChild(holder); };
-
-  html2pdf().set(opt).from(target).toPdf().get('pdf').then(pdf => {
-    // Her sayfaya alt bilgi ve sayfa numarası ekle
-    const total = pdf.internal.getNumberOfPages();
-    const w = pdf.internal.pageSize.getWidth();
-    const h = pdf.internal.pageSize.getHeight();
-    for (let i = 1; i <= total; i++) {
-      pdf.setPage(i);
-      pdf.setFontSize(8);
-      pdf.setTextColor(150);
-      pdf.text(`${BRAND_NAME} · ${org.title}`, 10, h - 6);
-      pdf.text(`Sayfa ${i} / ${total}`, w - 10, h - 6, { align: 'right' });
+  let printed = false;
+  const triggerPrint = () => {
+    if (printed) return; printed = true;
+    try {
+      const win = frame.contentWindow;
+      win.onafterprint = cleanup;
+      win.focus();
+      win.print();
+      // Bazı tarayıcılarda print() bloklamaz; güvenlik ağı olarak buton geri alınır.
+      setTimeout(() => { if (btn) { btn.disabled = false; btn.innerHTML = btnText; } }, 1200);
+      setTimeout(cleanup, 60000);
+    } catch (e) {
+      console.error('Baskı hatası:', e);
+      cleanup();
+      const w = window.open('', '_blank');
+      if (w) {
+        w.document.write(html); w.document.close();
+        w.onload = () => { w.focus(); w.print(); };
+      } else {
+        alert('PDF için baskı penceresi açılamadı. Lütfen açılır pencere (pop-up) iznini kontrol edip tekrar deneyin.');
+      }
     }
-  }).save().then(cleanup, cleanup);
+  };
+
+  const idoc = frame.contentWindow.document;
+  idoc.open();
+  idoc.write(html);
+  idoc.close();
+
+  // Logo (data-URI) ve düzen hazır olduğunda yazdır; onload tetiklenmezse yedek zamanlayıcı.
+  try { frame.contentWindow.onload = triggerPrint; } catch (e) {}
+  setTimeout(triggerPrint, 700);
 }
 
 function downloadFile(content, type, name) {
