@@ -1392,3 +1392,51 @@ video {
   .service-items li { font-size: 13px; }
   .btn, .btn-primary, .btn-dark, .btn-outline { font-size: 14px; }
 }
+
+/* ===================================================== */
+/* ACCESSIBILITY ADD-ONS (v2.2)                          */
+/* Skip-to-content link + keyboard focus visibility      */
+/* ===================================================== */
+
+/* "İçeriğe geç" — visually hidden until focused (keyboard/screen-reader) */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 1000;
+  background: var(--neks-deep);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 12px;
+  outline: 3px solid var(--neks-green);
+  outline-offset: 2px;
+}
+
+/* Remove default outline only when NOT navigating by keyboard */
+body:not(.keyboard-nav) a:focus,
+body:not(.keyboard-nav) button:focus {
+  outline: none;
+}
+
+/* Clear, consistent focus ring for keyboard users */
+body.keyboard-nav a:focus,
+body.keyboard-nav button:focus,
+body.keyboard-nav input:focus,
+body.keyboard-nav select:focus,
+body.keyboard-nav textarea:focus {
+  outline: 3px solid var(--neks-teal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Target highlight when jumping to #main-content */
+#main-content:focus {
+  outline: none;
+}

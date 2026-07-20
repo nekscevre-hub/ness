@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="Sürdürülebilirlik raporlaması (GRI), yaşam döngüsü analizi (LCA), karbon ayak izi, atık ve atıksu yönetimi, TÜBİTAK/AB Ar-Ge proje danışmanlığı. Bursa merkezli çevre mühendisliği çözümleri.">
 <meta name="keywords" content="çevre danışmanlığı, sürdürülebilirlik raporlaması, GRI raporlama, yaşam döngüsü analizi, LCA, karbon ayak izi, su ayak izi, AB Yeşil Mutabakatı, SKDM, atıksu yönetimi, çamur yönetimi, TÜBİTAK proje danışmanlığı, çevre mühendisliği Bursa">
 <meta name="author" content="NEKS Çevre Teknolojileri ve Yönetimi Ltd. Şti.">
@@ -15,6 +15,7 @@
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
 <link rel="canonical" href="https://www.nekscevre.com.tr/hizmetler">
 
 <!-- Open Graph / sosyal paylaşım (LinkedIn, WhatsApp, Facebook) -->
@@ -144,6 +145,7 @@
 </script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">İçeriğe geç</a>
 <nav>
   <a href="/" class="nav-logo">
     <img src="Neks_icon.png" alt="NEKS" style="height:44px;width:auto;display:block;" loading="eager" decoding="async" width="44" height="44">
@@ -162,9 +164,9 @@
     <li><a href="ortaklar" id="nav-ortaklar">İş Ortakları</a></li>
   </ul>
   <a href="iletisim" class="nav-cta">İletişime Geçin</a>
-  <button class="nav-mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  <button class="nav-mobile-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
 </nav>
-<div class="mobile-menu">
+<div class="mobile-menu" id="mobileMenu">
   <a href="/" id="nav-index">Ana Sayfa</a>
   <a href="hakkimizda" id="nav-hakkimizda">Hakkımızda</a>
   <a href="hizmetler" id="nav-hizmetler">Hizmetler</a>
@@ -175,7 +177,7 @@
   <a href="iletisim" class="nav-cta" style="margin-top:10px;width:100%;text-align:center;">İletişime Geçin</a>
 </div>
 
-<div class="page-header">
+<div class="page-header" id="main-content" tabindex="-1">
   <div class="page-header-bg"></div>
   <div class="page-header-grid"></div>
   <div class="page-header-inner">
@@ -330,9 +332,9 @@
     <div class="footer-col">
       <h4>Hizmetler</h4>
       <ul>
-        <li><a href="hizmetler.html#surdurulebilirlik">Sürdürülebilirlik Danışmanlığı</a></li>
-        <li><a href="hizmetler.html#cevre-teknolojileri">Çevre Teknolojileri</a></li>
-        <li><a href="hizmetler.html#ar-ge">Ar-Ge ve İnovasyon</a></li>
+        <li><a href="hizmetler#surdurulebilirlik">Sürdürülebilirlik Danışmanlığı</a></li>
+        <li><a href="hizmetler#cevre-teknolojileri">Çevre Teknolojileri</a></li>
+        <li><a href="hizmetler#ar-ge">Ar-Ge ve İnovasyon</a></li>
       </ul>
     </div>
     <div class="footer-col">

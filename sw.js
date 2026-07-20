@@ -1,147 +1,84 @@
 /**
- * NEKS Service Worker
- * Offline support, caching strategy, background sync
+ * NEKS Çevre Teknolojileri - Service Worker
+ * ------------------------------------------------------------------
+ * Strategy:
+ *   - HTML navigations  -> NETWORK-FIRST  (content is always fresh;
+ *                          falls back to cache only when offline)
+ *   - Static assets     -> CACHE-FIRST    (css/js/images/fonts served
+ *                          instantly on repeat visits)
+ *
+ * IMPORTANT: When you change the CSS or JS, bump CACHE_VERSION below
+ * (e.g. 'v1' -> 'v2'). This clears the old cached assets on the next
+ * visit so users never get stale styles/scripts.
  */
 
-const CACHE_NAME = 'neks-v2';
-const ASSETS_TO_CACHE = [
+const CACHE_VERSION = 'v1';
+const STATIC_CACHE = 'neks-static-' + CACHE_VERSION;
+const PAGES_CACHE = 'neks-pages-' + CACHE_VERSION;
+
+// Assets safe to pre-cache on install
+const PRECACHE_URLS = [
   '/',
-  '/hakkimizda',
-  '/hizmetler',
-  '/yetkinlik',
-  '/ortaklar',
-  '/iletisim',
   '/neks-styles-optimized.css',
-  '/neks-scripts-optimized.js',
-  '/Neks_icon.png'
+  '/neks-scripts-optimized.js'
 ];
 
-// Install event - cache assets
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.addAll(ASSETS_TO_CACHE);
-      })
-      .catch(err => {
-        console.log('Cache installation failed:', err);
-      })
+    caches.open(STATIC_CACHE)
+      .then((cache) => cache.addAll(PRECACHE_URLS))
+      .then(() => self.skipWaiting())
+      .catch(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
-// Activate event - clean old caches
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames
-          .filter(cacheName => cacheName !== CACHE_NAME)
-          .map(cacheName => caches.delete(cacheName))
-      );
+    caches.keys().then((keys) => Promise.all(
+      keys
+        .filter((k) => k !== STATIC_CACHE && k !== PAGES_CACHE)
+        .map((k) => caches.delete(k))
+    )).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
+
+  // Only handle GET, same-origin requests. Leave POST (Netlify form),
+  // analytics and cross-origin fonts to the network untouched.
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+
+  const isHTML = req.mode === 'navigate' ||
+    (req.headers.get('accept') || '').includes('text/html');
+
+  if (isHTML) {
+    // NETWORK-FIRST for pages
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(PAGES_CACHE).then((c) => c.put(req, copy));
+          return res;
+        })
+        .catch(() => caches.match(req).then((cached) => cached || caches.match('/')))
+    );
+    return;
+  }
+
+  // CACHE-FIRST for static assets
+  event.respondWith(
+    caches.match(req).then((cached) => {
+      if (cached) return cached;
+      return fetch(req).then((res) => {
+        if (res && res.status === 200 && res.type === 'basic') {
+          const copy = res.clone();
+          caches.open(STATIC_CACHE).then((c) => c.put(req, copy));
+        }
+        return res;
+      });
     })
   );
-  self.clients.claim();
-});
-
-// Fetch event - caching strategies
-self.addEventListener('fetch', event => {
-  const { request } = event;
-  const url = new URL(request.url);
-
-  // Skip non-GET requests
-  if (request.method !== 'GET') {
-    return;
-  }
-
-  // Skip Netlify Functions and external APIs
-  if (url.origin !== location.origin) {
-    return;
-  }
-
-  // HTML files - Network first, fallback to cache
-  if (request.headers.get('accept')?.includes('text/html')) {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          if (!response || response.status !== 200) {
-            return response;
-          }
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(request, responseClone);
-          });
-          return response;
-        })
-        .catch(() => {
-          return caches.match(request)
-            .then(response => response || new Response('Offline', { status: 503 }));
-        })
-    );
-  } else {
-    // CSS, JS, Images - Cache first, fallback to network
-    event.respondWith(
-      caches.match(request)
-        .then(response => {
-          if (response) {
-            return response;
-          }
-          return fetch(request).then(response => {
-            if (!response || response.status !== 200) {
-              return response;
-            }
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(request, responseClone);
-            });
-            return response;
-          });
-        })
-        .catch(() => {
-          // Return placeholder for images
-          if (request.destination === 'image') {
-            return new Response(
-              '<svg><rect fill="#f0f0f0"/></svg>',
-              { headers: { 'Content-Type': 'image/svg+xml' } }
-            );
-          }
-          return new Response('Offline', { status: 503 });
-        })
-    );
-  }
-});
-
-// Background sync for form submissions
-self.addEventListener('sync', event => {
-  if (event.tag === 'sync-forms') {
-    event.waitUntil(syncForms());
-  }
-});
-
-async function syncForms() {
-  try {
-    const db = await openIndexedDB();
-    const forms = await db.getAll('pending-forms');
-    
-    for (const form of forms) {
-      try {
-        await fetch('/', {
-          method: 'POST',
-          body: new FormData(form.data)
-        });
-        await db.delete('pending-forms', form.id);
-      } catch (err) {
-        console.log('Form sync failed:', err);
-      }
-    }
-  } catch (err) {
-    console.log('Sync failed:', err);
-  }
-}
-
-// Messaging from clients
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
 });

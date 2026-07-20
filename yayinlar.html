@@ -2,7 +2,8 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="description" content="Prof. Dr. Nezih Kamil Salihoğlu seçilmiş bilimsel yayınları: 94 yayın, 579 atıf (WoS), H-İndeksi 13. Atıksu, arıtma çamuru, PAH/PCB, LCA ve katı atık yönetimi araştırmaları.">
 <meta name="keywords" content="Nezih Kamil Salihoğlu yayınlar, çevre mühendisliği araştırma, atıksu çamuru, LCA Türkiye, PAH PCB Bursa, bilimsel atıf">
 <meta name="theme-color" content="#082650">
@@ -26,6 +27,7 @@
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="neks-styles-optimized.css" media="print" onload="this.media='all'">
@@ -81,6 +83,7 @@
 <title>Yayınlar & Araştırma – NEKS Çevre Teknolojileri | Prof. Dr. Nezih Kamil Salihoğlu</title>
 </head>
 <body>
+<a href="#main-content" class="skip-link">İçeriğe geç</a>
 <nav>
   <a href="/" class="nav-logo">
     <img src="Neks_icon.png" alt="NEKS" style="height:44px;width:auto;display:block;" loading="eager" decoding="async" width="44" height="44">
@@ -99,9 +102,9 @@
     <li><a href="ortaklar" id="nav-ortaklar">İş Ortakları</a></li>
   </ul>
   <a href="iletisim" class="nav-cta">İletişime Geçin</a>
-  <button class="nav-mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  <button class="nav-mobile-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
 </nav>
-<div class="mobile-menu">
+<div class="mobile-menu" id="mobileMenu">
   <a href="/" id="nav-index">Ana Sayfa</a>
   <a href="hakkimizda" id="nav-hakkimizda">Hakkımızda</a>
   <a href="hizmetler" id="nav-hizmetler">Hizmetler</a>
@@ -112,7 +115,7 @@
   <a href="iletisim" class="nav-cta" style="margin-top:10px;width:100%;text-align:center;">İletişime Geçin</a>
 </div>
 
-<div class="page-header">
+<div class="page-header" id="main-content" tabindex="-1">
   <div class="page-header-bg"></div>
   <div class="page-header-grid"></div>
   <div class="page-header-inner">

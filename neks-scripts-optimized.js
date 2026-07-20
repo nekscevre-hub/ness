@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       const isActive = menuToggle.classList.toggle('active');
       mobileMenu.classList.toggle('active');
+      // Announce state to assistive technology
+      menuToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
       // Prevent body scroll when menu is open
       body.style.overflow = isActive ? 'hidden' : '';
     });
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
   mobileLinks.forEach(link => {
     link.addEventListener('click', function() {
       menuToggle.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
       mobileMenu.classList.remove('active');
       body.style.overflow = '';
     });
@@ -43,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (!isClickInsideMenu && !isClickInsideToggle && mobileMenu.classList.contains('active')) {
         menuToggle.classList.remove('active');
+        menuToggle.setAttribute('aria-expanded', 'false');
         mobileMenu.classList.remove('active');
         body.style.overflow = '';
       }
@@ -53,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('active')) {
       menuToggle.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
       mobileMenu.classList.remove('active');
       body.style.overflow = '';
     }
@@ -253,6 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // Close mobile menu if open
           if (mobileMenu && mobileMenu.classList.contains('active')) {
             menuToggle.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
             mobileMenu.classList.remove('active');
             body.style.overflow = '';
           }
@@ -263,6 +269,10 @@ document.addEventListener('DOMContentLoaded', function() {
             top: targetPosition,
             behavior: 'smooth'
           });
+          // Move keyboard focus for skip-link / in-page anchors
+          if (target.hasAttribute('tabindex')) {
+            target.focus({ preventScroll: true });
+          }
         }
       }
     });
@@ -292,23 +302,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // ============================================
   // 6. LAZY LOADING & PERFORMANCE
   // ============================================
-  if ('IntersectionObserver' in window) {
-    const images = document.querySelectorAll('img[loading="lazy"]');
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          // Force reload
-          img.src = img.src;
-          observer.unobserve(img);
-        }
-      });
-    }, {
-      rootMargin: '50px'
-    });
-
-    images.forEach(img => imageObserver.observe(img));
-  }
+  // Native lazy-loading (loading="lazy") already defers off-screen images.
+  // The previous JS re-assigned img.src = img.src, which forced a redundant
+  // re-fetch and effectively cancelled the native optimization. Removed.
 
   // ============================================
   // 7. VIDEO AUTOPLAY OPTIMIZATION
@@ -360,6 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close mobile menu on orientation change
     if (mobileMenu && mobileMenu.classList.contains('active')) {
       menuToggle.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
       mobileMenu.classList.remove('active');
       body.style.overflow = '';
     }
@@ -456,7 +453,7 @@ window.addEventListener('load', function() {
   if (!viewport) {
     const newViewport = document.createElement('meta');
     newViewport.name = 'viewport';
-    newViewport.content = 'width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5';
+    newViewport.content = 'width=device-width, initial-scale=1, viewport-fit=cover';
     document.head.appendChild(newViewport);
   }
 });
@@ -490,14 +487,16 @@ function showFormMessage(type, message) {
 // 17. PREFETCH NAVIGATION LINKS
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
-  const links = document.querySelectorAll('a[href*=".html"]');
-  links.forEach(link => {
+  // Prefetch the main navigation destinations (clean, extensionless URLs).
+  const seen = new Set();
+  document.querySelectorAll('.nav-links a[href], .mobile-menu a[href]').forEach(link => {
     const href = link.getAttribute('href');
-    if (href && !href.startsWith('http') && !href.startsWith('//')) {
-      const prefetchLink = document.createElement('link');
-      prefetchLink.rel = 'prefetch';
-      prefetchLink.href = href;
-      document.head.appendChild(prefetchLink);
-    }
+    if (!href || href.startsWith('http') || href.startsWith('//') || href.startsWith('#')) return;
+    if (seen.has(href)) return;
+    seen.add(href);
+    const prefetchLink = document.createElement('link');
+    prefetchLink.rel = 'prefetch';
+    prefetchLink.href = href;
+    document.head.appendChild(prefetchLink);
   });
 });
