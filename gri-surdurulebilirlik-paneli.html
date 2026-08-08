@@ -34,6 +34,11 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 
+<!-- Fonts (index.html ile aynı yazı stili: Inter) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <!-- Structured Data: WebApplication (ön değerlendirme aracı) -->
 <script type="application/ld+json">
 {
@@ -120,9 +125,10 @@
   :root {
     --primary: #082650;
     --primary-2: #0b3068;
-    --accent: #0a7c6e;
-    --accent-dark: #086b5d;
-    --accent-light: #e6f4f1;
+    --accent: #04564e;
+    --accent-dark: #033a34;
+    --accent-light: #e6f2f0;
+    --accent-bright: #4de87a;
     --eco: #2f6bd8;
     --eco-light: #eaf1fc;
     --env: #0a7c6e;
@@ -146,7 +152,15 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text-dark); background: var(--white); line-height: 1.5; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text-dark); background: var(--white); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+
+  /* SKIP LINK (odaklanana kadar gizli) */
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 200;
+    background: var(--primary); color: #fff; padding: 10px 16px;
+    border-radius: 0 0 8px 0; font-size: 14px; font-weight: 600; text-decoration: none;
+  }
+  .skip-link:focus { left: 0; }
 
   /* NAV */
   nav {
@@ -159,7 +173,7 @@
   .nav-mark {
     width: 34px; height: 34px; border-radius: 9px; background: var(--primary);
     display: flex; align-items: center; justify-content: center;
-    font-family: var(--mono); font-weight: 700; font-size: 13px; color: #4ecdc4; letter-spacing: -.5px;
+    font-family: var(--mono); font-weight: 700; font-size: 13px; color: var(--accent-bright); letter-spacing: -.5px;
   }
   .nav-brand strong { display: block; font-size: 14px; font-weight: 800; color: var(--primary); letter-spacing: .04em; }
   .nav-brand span { font-size: 11px; color: var(--text-muted); letter-spacing: .02em; }
@@ -172,7 +186,7 @@
     padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px;
     background: var(--white); transition: all .2s; white-space: nowrap;
   }
-  .nav-back:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 4px 12px rgba(10,124,110,.12); }
+  .nav-back:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 4px 12px rgba(4,86,78,.14); }
   .nav-status b { color: var(--accent); }
   @media (min-width: 620px) { .nav-status { display: inline; } }
 
@@ -180,16 +194,16 @@
   .page-header { background: var(--primary); padding: 68px 40px 60px; position: relative; overflow: hidden; }
   .page-header::before {
     content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 55% 90% at 82% 40%, rgba(10,124,110,.34) 0%, transparent 68%);
+    background: radial-gradient(ellipse 55% 90% at 82% 40%, rgba(45,194,126,.28) 0%, transparent 68%);
   }
   .page-header-inner { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
   .page-eyebrow {
     display: inline-flex; align-items:center; gap:8px; font-size: 11px; font-weight: 700; letter-spacing: .12em;
     text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: 16px;
   }
-  .page-eyebrow .tag { font-family: var(--mono); background: rgba(78,205,196,.14); color:#4ecdc4; padding:3px 8px; border-radius:5px; letter-spacing:.02em; }
+  .page-eyebrow .tag { font-family: var(--mono); background: rgba(77,232,122,.14); color:var(--accent-bright); padding:3px 8px; border-radius:5px; letter-spacing:.02em; }
   .page-header h1 { font-size: 40px; font-weight: 800; color: white; line-height: 1.14; margin-bottom: 16px; letter-spacing: -.01em; }
-  .page-header h1 em { font-style: normal; color: #4ecdc4; }
+  .page-header h1 em { font-style: normal; color: var(--accent-bright); }
   .page-header p { font-size: 16px; color: rgba(255,255,255,.66); max-width: 620px; line-height: 1.7; }
   .series-chips { display:flex; gap:10px; margin-top:26px; flex-wrap:wrap; }
   .series-chip { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); padding:7px 12px; border-radius:20px; font-size:12px; color:rgba(255,255,255,.85); }
@@ -243,7 +257,7 @@
     font-size: 14px; color: var(--text-dark); font-family: inherit; background: white; outline: none;
     transition: border-color .15s, box-shadow .15s; width: 100%;
   }
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(10,124,110,.09); }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(4,86,78,.12); }
   textarea { resize: vertical; line-height: 1.6; }
   select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6a7e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
   .hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
@@ -358,7 +372,7 @@
     .form-grid { grid-template-columns: 1fr; }
     .metrics-grid { grid-template-columns: 1fr; }
     .metric-row { grid-template-columns: 1fr; }
-    .nav { padding: 0 20px; }
+    nav { padding: 0 20px; }
     .page-header { padding: 40px 20px 36px; }
     .page-header h1 { font-size: 28px; }
   }
@@ -628,7 +642,7 @@
     <p class="section-lead">Kuruluşunuzun performansını ölçmek için seçili material topics'e ait GRI göstergelerini girin.</p>
 
     <div class="info-box">
-      <strong>📈 GRI Göstergeleri</strong> - Her material topic için spesifik veri noktaları. Tüm sayılar kesin tahmindir veya 2025 verilerine dayanır.
+      <strong>📈 GRI Göstergeleri</strong> - Her material topic için spesifik veri noktaları. Girilen sayılar tahminî olabilir veya kuruluşunuzun güncel verilerine dayanabilir.
     </div>
 
     <div style="margin-bottom: 24px;">
@@ -749,7 +763,9 @@
     <h2 class="section-title">Sürdürülebilirlik Ön Değerlendirme Raporu</h2>
     
     <div class="btn-row">
-      <button class="btn btn-accent" onclick="downloadPDF()">📑 Raporu İndir</button>
+      <button class="btn btn-accent" onclick="downloadPDF()">📑 PDF İndir</button>
+      <button class="btn" onclick="downloadHTML()">🌐 HTML İndir</button>
+      <button class="btn" onclick="downloadJSON()">🗂️ JSON İndir</button>
       <button class="btn" onclick="resetAll()">Sıfırla</button>
     </div>
 
@@ -1145,6 +1161,7 @@ function generateReport() {
       <div class="score-card">
         <div class="score-value" style="color: var(--eco);">${fmtScore(analysis.eco)}</div>
         <div class="score-label">Ekonomik</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Veri kapsamı %${analysis.ecoCov}</div>
       </div>
       <div class="score-card">
         <div class="score-value" style="color: var(--env);">${fmtScore(analysis.env)}</div>
@@ -1154,6 +1171,7 @@ function generateReport() {
       <div class="score-card">
         <div class="score-value" style="color: var(--soc);">${fmtScore(analysis.soc)}</div>
         <div class="score-label">Sosyal</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Veri kapsamı %${analysis.socCov}</div>
       </div>
     </div>
     <p style="font-size: 13px; color: var(--text-muted);">
@@ -1301,7 +1319,7 @@ function reportReady() {
 function pdfReportCss() {
   return `
   :root{
-    --primary:#082650;--accent:#0a7c6e;--eco:#2f6bd8;--eco-light:#eaf1fc;
+    --primary:#082650;--accent:#04564e;--eco:#2f6bd8;--eco-light:#eaf1fc;
     --env:#0a7c6e;--env-light:#e6f4f1;--soc:#b5560f;--accent-light:#e6f4f1;
     --ok:#0a7c6e;--warn:#c98a00;--bad:#d32f2f;
     --text-dark:#0d1b2a;--text-muted:#5a6a7e;--border:#e2e6ec;--light-bg:#f7f8fa;
@@ -1311,7 +1329,7 @@ function pdfReportCss() {
     color:#0d1b2a;background:#fff;width:750px;margin:0 auto;line-height:1.5;font-size:13px;}
   .pdf-root h1,.pdf-root h2,.pdf-root h3,.pdf-root h4,.pdf-root h5{margin:0;}
   .pdf-cover{background:#082650;color:#fff;padding:34px 34px 28px;border-radius:12px;margin-bottom:22px;}
-  .pdf-cover .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4ecdc4;font-weight:700;margin-bottom:12px;}
+  .pdf-cover .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4de87a;font-weight:700;margin-bottom:12px;}
   .pdf-cover-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
   .pdf-cover-logo{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;}
   .pdf-cover-logo img{width:66px;height:66px;object-fit:contain;background:#fff;border-radius:12px;padding:8px;}
@@ -1321,7 +1339,7 @@ function pdfReportCss() {
   .pdf-cover .meta{display:flex;flex-wrap:wrap;gap:14px 26px;margin-top:20px;font-size:12px;color:rgba(255,255,255,.85);}
   .pdf-cover .meta div span{display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:2px;}
   .pdf-cover .meta div b{font-size:13px;font-weight:700;color:#fff;}
-  .report-section{background:#fff;border:1px solid #e2e6ec;border-left:4px solid #0a7c6e;
+  .report-section{background:#fff;border:1px solid #e2e6ec;border-left:4px solid #04564e;
     border-radius:8px;padding:16px 18px;margin-bottom:14px;page-break-inside:auto;break-inside:auto;}
   /* Uzun bölümler (ör. gösterge tablosu) sayfaya sığmadığında güvenli noktalardan bölünsün;
      başlıklar içerikten kopmasın, satır/kart/madde parçalanmasın */
@@ -1330,7 +1348,7 @@ function pdfReportCss() {
   .gri-table thead{display:table-header-group;}
   .report-section h4{font-size:15px;color:#082650;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-weight:700;}
   .rs-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;min-width:26px;
-    background:#0a7c6e;color:#fff;border-radius:50%;font-weight:700;font-size:12px;}
+    background:#04564e;color:#fff;border-radius:50%;font-weight:700;font-size:12px;}
   .report-section h5{font-size:13px;color:#082650;margin:14px 0 4px;font-weight:700;}
   .report-section p{margin:0 0 8px;font-size:13px;}
   .gri-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px;}
@@ -1338,16 +1356,16 @@ function pdfReportCss() {
   .gri-table td{padding:8px 10px;border:1px solid #e2e6ec;vertical-align:top;}
   .gri-table .num{text-align:right;font-variant-numeric:tabular-nums;}
   .score-card{border:1px solid #e2e6ec;border-radius:8px;padding:12px 8px;text-align:center;background:#fff;}
-  .score-value{font-size:26px;font-weight:800;color:#0a7c6e;line-height:1.1;}
+  .score-value{font-size:26px;font-weight:800;color:#04564e;line-height:1.1;}
   .score-label{font-size:12px;color:#5a6a7e;font-weight:600;margin-top:2px;}
   .list-item{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start;}
-  .list-dot{width:20px;height:20px;min-width:20px;background:#0a7c6e;color:#fff;border-radius:50%;
+  .list-dot{width:20px;height:20px;min-width:20px;background:#04564e;color:#fff;border-radius:50%;
     display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
   .rec-item .list-dot{background:#c98a00;}
   .rec-ref{font-family:'SFMono-Regular',Consolas,monospace;font-size:11px;font-weight:700;color:#c98a00;margin-right:5px;}
   .pdf-root ul{margin:6px 0 6px 18px;}
   .pdf-root li{margin-bottom:3px;font-size:13px;}
-  .pdf-root a{color:#0a7c6e;text-decoration:none;}
+  .pdf-root a{color:#04564e;text-decoration:none;}
   .report-brand-foot{page-break-inside:avoid;break-inside:avoid;}
   .report-brand-foot img{width:56px;height:56px;object-fit:contain;}
   `;
